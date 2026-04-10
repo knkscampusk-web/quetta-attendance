@@ -440,14 +440,15 @@ function renderClasses(q) {
 
   if (!filtered.length) { list.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>'; return; }
 
-  list.innerHTML = filtered.map(c => `
-    <div class="class-item" onclick="openClass(${JSON.stringify(c.그룹명)})">
+  list.innerHTML = filtered.map((c, i) => `
+    <div class="class-item" onclick="openClassByIndex(${i})">
       <div>
         <div class="class-item-name">${c.그룹명}</div>
         <div class="class-item-sub">${c.subjects}</div>
       </div>
       <span class="class-count">${c.count}명</span>
     </div>`).join('');
+  window._filteredClasses = filtered;
 }
 
 document.getElementById('class-search').addEventListener('input', e => renderClasses(e.target.value.trim()));
@@ -455,6 +456,11 @@ document.getElementById('class-search').addEventListener('input', e => renderCla
 // ═══════════════════════════════
 // 수업 열기
 // ═══════════════════════════════
+function openClassByIndex(i) {
+  const c = window._filteredClasses[i];
+  if (c) openClass(c.그룹명);
+}
+
 function openClass(그룹명) {
   selectedClass = 그룹명;
 
