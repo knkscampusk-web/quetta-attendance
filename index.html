@@ -56,7 +56,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .sfb{background:#f9fafb;border-bottom:1px solid var(--br);padding:6px 12px;display:flex;gap:6px;overflow-x:auto;flex-shrink:0}
 .sfc{padding:4px 11px;border:1.5px solid var(--br);border-radius:20px;font-size:11px;font-weight:600;background:var(--w);color:var(--mu);cursor:pointer;white-space:nowrap}
 .sfc.active{background:#475569;color:#fff;border-color:#475569}
-.sfc.a-외박{background:#6366f1!important;border-color:#6366f1!important}
+.sfc.a-외박{background:#6366f1!important;border-color:#6366f1!important;color:#fff!important}
 .sfc.a-취소{background:#9ca3af!important;border-color:#9ca3af!important}
 .sfc.a-기타{background:#f59e0b!important;border-color:#f59e0b!important}
 .sfc.a-미체크{background:var(--td)!important;border-color:var(--td)!important}
@@ -358,13 +358,15 @@ async function loadStu(){
   }catch(e){l.innerHTML=`<div class="empty">로드 실패<br>${e.message}<br><button class="rb" onclick="loadStu()">다시 시도</button></div>`}
 }
 
+function isRealJoham(s){if(!s||!s.trim())return false;return!/^\d+$/.test(s.trim())}
 function buildCls(){
   const m={};
   for(const id in allStu){
     (allStu[id].수업목록||[]).forEach(u=>{
       if(!u.그룹명)return;
-      const k=`${u.그룹명}|||${u.조합}|||${u.과목명||''}`;
-      if(!m[k])m[k]={그룹명:u.그룹명,조합:u.조합,과목명:u.과목명||'',cnt:0};
+      const jo=isRealJoham(u.조합)?u.조합:'';
+      const k=`${u.그룹명}|||${jo}|||${u.과목명||''}`;
+      if(!m[k])m[k]={그룹명:u.그룹명,조합:jo,과목명:u.과목명||'',cnt:0};
       m[k].cnt++;
     });
   }
@@ -497,12 +499,9 @@ document.getElementById('idi').addEventListener('keydown',e=>{
   const now=Date.now();
   const path=`attendance/${wk}/${sk(curSes.id)}/${v}`;
   if(!match){
-    // 비수강생 처리
-    if(confirm(`${stu.성명}은(는) 수강생이 아닙니다.\n비수강생으로 출석 처리할까요?`)){
-      const existing=attData[v]||{};
-      db.ref(path).set({status:'출석',nonMember:true,checked_at:existing.checked_at||now,updated_at:now});
-      showSiBox(stu.성명,'비수강생');
-    }else{showSiBox(stu.성명,'미수강');}
+    const existing=attData[v]||{};
+    db.ref(path).set({status:'출석',nonMember:true,checked_at:existing.checked_at||now,updated_at:now});
+    showSiBox(stu.성명,'비수강생');
     e.target.value='';return;
   }
   const existing=attData[v]||{};
@@ -546,14 +545,18 @@ function listenAtt(){
 }
 
 function getSessionStudents(){
-  const keys=new Set((curSes.items||[]).map(it=>`${it.그룹명}|||${it.조합}`));
+  const keys=new Set((curSes.items||[]).map(it=>`${it.그룹명}|||${it.조합||''}|||${it.과목명||''}`));
   const res=[];const addedIds=new Set();
   for(const id in allStu){
     const s=allStu[id];
-    const match=(s.수업목록||[]).find(u=>keys.has(`${u.그룹명}|||${u.조합}`));
+    // 입소일 없으면 미입소 → 제외 / 퇴소일 있으면 퇴소 → 제외
+    if(!s.입소일||s.퇴소일)continue;
+    const match=(s.수업목록||[]).find(u=>{
+      const jo=isRealJoham(u.조합)?u.조합:'';
+      return keys.has(`${u.그룹명}|||${jo}|||${u.과목명||''}`);
+    });
     if(match){res.push({...s,해당수업:match,nonMember:false});addedIds.add(id);}
   }
-  // 비수강생 (attData에 nonMember:true로 있는 학생)
   for(const id in attData){
     if(!addedIds.has(id)&&attData[id].nonMember){
       const s=allStu[id]||{학번:id,성명:'(미확인)',반:'',성별:'',퀀텀자리:'',외박여부:''};
