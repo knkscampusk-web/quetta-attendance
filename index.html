@@ -232,6 +232,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
     <input type="file" id="fi2" accept=".xlsx,.xls">
     <button class="bar" id="badd">+ 수업 추가</button>
     <button class="bst" id="bstt">💾 저장</button>
+    <button style="padding:7px 14px;background:none;color:#dc2626;border:1.5px solid #dc2626;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer" id="bttclr">전체 삭제</button>
   </div>
   <div class="tt-sw"><input type="search" id="tt-srch" placeholder="그룹, 과목, 선생님, 강의실 검색..."></div>
   <div class="ttl" id="ttl"><div class="empty">시간표 없음</div></div>
@@ -392,8 +393,15 @@ document.getElementById('srch').addEventListener('input',e=>renderCls(e.target.v
 
 function getTodaySes(){return sessions.filter(s=>s.요일===today())}
 function getSesStudentCount(ses){
-  const keys=new Set((ses.items||[]).map(it=>`${it.그룹명}|||${it.조합}`));
-  let cnt=0;for(const id in allStu){if((allStu[id].수업목록||[]).some(u=>keys.has(`${u.그룹명}|||${u.조합}`)))cnt++;}
+  const keys=new Set((ses.items||[]).map(it=>`${it.그룹명}|||${it.조합||''}|||${it.과목명||''}`));
+  let cnt=0;
+  for(const id in allStu){
+    if(!allStu[id].입소일||allStu[id].퇴소일)continue;
+    if((allStu[id].수업목록||[]).some(u=>{
+      const jo=isRealJoham(u.조합)?u.조합:'';
+      return keys.has(`${u.그룹명}|||${jo}|||${u.과목명||''}`);
+    }))cnt++;
+  }
   return cnt;
 }
 
@@ -754,6 +762,12 @@ function renderTT(){
 }
 function updTT(i,k,v){if(tt[i])tt[i][k]=v}
 function delTT(i){if(!confirm('삭제?'))return;tt.splice(i,1);renderTT()}
+document.getElementById('bttclr').addEventListener('click',async()=>{
+  if(!confirm('시간표 전체를 삭제할까요?'))return;
+  tt=[];renderTT();
+  try{await db.ref('timetable').remove();alert('✅ 시간표 초기화 완료!')}
+  catch(e){alert('실패: '+e.message)}
+});
 document.getElementById('badd').addEventListener('click',()=>{tt.push({요일:'월',시간:'',과목:'',그룹:'',조합:'',선생님:'',강의실:''});renderTT();document.getElementById('ttl').lastElementChild?.scrollIntoView({behavior:'smooth'})});
 document.getElementById('bstt').addEventListener('click',async()=>{
   try{const d={};tt.forEach((t,i)=>{d[`r${i}`]=t});await db.ref('timetable').set(d);alert('✅ 시간표 저장!')}
@@ -768,7 +782,7 @@ document.getElementById('fi2').addEventListener('change',e=>{
       const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
       const nr=rows.map(r=>({요일:String(r['요일']||'').trim(),시간:String(r['시간']||'').trim(),과목:String(r['과목']||r['과 목']||'').trim(),그룹:String(r['그룹']||'').trim(),조합:String(r['조합']||'').trim(),선생님:String(r['선생님']||'').trim(),강의실:String(r['강의실']||'').trim()})).filter(r=>r.그룹);
       if(!nr.length){alert('데이터 없음');return}
-      if(confirm(`${nr.length}개 [확인]추가 [취소]교체`))tt=[...tt,...nr];else tt=nr;
+      if(confirm(`${nr.length}개 수업을 불러왔습니다.\n[확인] 기존 교체  [취소] 기존에 추가`))tt=nr;else tt=[...tt,...nr];
       renderTT();
     }catch(e){alert('파일 오류: '+e.message)}
     e.target.value='';
