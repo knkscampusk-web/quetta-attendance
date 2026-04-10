@@ -441,16 +441,27 @@ function renderCls(q=''){
 
   let html='';
   if(!q){
-    const todayL=filtered.filter(c=>todaySesSk.has(`${c.그룹명}|||${c.조합}|||${c.과목명||''}`));
-    const regL=filtered.filter(c=>allSesSk.has(`${c.그룹명}|||${c.조합}|||${c.과목명||''}`)&&!todaySesSk.has(`${c.그룹명}|||${c.조합}|||${c.과목명||''}`));
-    const othL=filtered.filter(c=>!allSesSk.has(`${c.그룹명}|||${c.조합}|||${c.과목명||''}`));
-    window._fc=[...todayL,...regL,...othL];
-    if(todayL.length){html+=`<div class="sl2">오늘(${td}) 정기수업</div>`;html+=todayL.map((c,i)=>ciHTML(c,i,true)).join('')}
-    if(regL.length){html+=`<div class="sl2">정기수업</div>`;html+=regL.map((c,i)=>ciHTML(c,todayL.length+i,false)).join('')}
-    if(othL.length){html+=`<div class="sl2">전체 수업 (${othL.length})</div>`;html+=othL.map((c,i)=>ciHTML(c,todayL.length+regL.length+i,false)).join('')}
+    // 전체 탭: 저장된 세션 목록 먼저, 그 다음 전체 수업
+    if(sessions.length){
+      html+=`<div class="sl2">정기수업 세션 (${sessions.length})</div>`;
+      window._tds=sessions;
+      html+=sessions.map((s,i)=>{
+        const cnt=getSesStudentCount(s);
+        const isToday=s.요일===td;
+        return`<div class="ci${isToday?' tc':''}" onclick="openSes(${i})">
+          <div><div class="cn">${s.name}</div>
+          <div class="cs">${[s.요일,s.시간,s.강의실,s.선생님].filter(Boolean).join(' · ')}</div>
+          <div class="ct">${(s.items||[]).length}개 수업 포함</div></div>
+          <span class="cc${isToday?' today':''}">${cnt}명</span>
+        </div>`;
+      }).join('');
+    }
+    window._fc=filtered;
+    html+=`<div class="sl2">전체 수업 (${filtered.length})</div>`;
+    html+=filtered.map((c,i)=>ciHTML(c,i,false)).join('');
   }else{
     window._fc=filtered;
-    html=filtered.map((c,i)=>ciHTML(c,i,todaySesSk.has(`${c.그룹명}|||${c.조합}|||${c.과목명||''}`))).join('');
+    html=filtered.map((c,i)=>ciHTML(c,i,false)).join('');
   }
   l.innerHTML=html;
 }
@@ -755,7 +766,7 @@ document.getElementById('fi2').addEventListener('change',e=>{
     try{
       const wb=XLSX.read(ev.target.result,{type:'binary'});
       const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
-      const nr=rows.map(r=>({요일:String(r['요일']||'').trim(),시간:String(r['시간']||'').trim(),과목:String(r['과목']||'').trim(),그룹:String(r['그룹']||'').trim(),조합:String(r['조합']||'').trim(),선생님:String(r['선생님']||'').trim(),강의실:String(r['강의실']||'').trim()})).filter(r=>r.그룹);
+      const nr=rows.map(r=>({요일:String(r['요일']||'').trim(),시간:String(r['시간']||'').trim(),과목:String(r['과목']||r['과 목']||'').trim(),그룹:String(r['그룹']||'').trim(),조합:String(r['조합']||'').trim(),선생님:String(r['선생님']||'').trim(),강의실:String(r['강의실']||'').trim()})).filter(r=>r.그룹);
       if(!nr.length){alert('데이터 없음');return}
       if(confirm(`${nr.length}개 [확인]추가 [취소]교체`))tt=[...tt,...nr];else tt=nr;
       renderTT();
