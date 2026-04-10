@@ -5,217 +5,175 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>QUETTA 출석부</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--teal:#2BADA0;--teal-dark:#0D6B64;--gold:#D4BE52;--bg:#f4f6f8;--white:#fff;--text:#1a1a1a;--muted:#6b7280;--border:#e5e7eb}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .screen{display:none;min-height:100vh;flex-direction:column}
+    .screen.active{display:flex}
 
-    :root {
-      --teal:      #2BADA0;
-      --teal-dark: #0D6B64;
-      --gold:      #D4BE52;
-      --bg:        #f4f6f8;
-      --white:     #ffffff;
-      --text:      #1a1a1a;
-      --muted:     #6b7280;
-      --border:    #e5e7eb;
-    }
+    /* 로그인 */
+    #screen-login{justify-content:center;align-items:center;background:linear-gradient(160deg,var(--teal-dark),var(--teal));padding:24px}
+    .login-box{background:#fff;border-radius:20px;padding:40px 32px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
+    .login-logo{text-align:center;margin-bottom:36px}
+    .logo-title{font-size:22px;font-weight:800;color:var(--teal-dark)}
+    .logo-sub{font-size:13px;color:var(--muted);margin-top:4px}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+    .field input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;outline:none;transition:border-color .2s}
+    .field input:focus{border-color:var(--teal)}
+    .btn-login{width:100%;padding:14px;margin-top:4px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
+    .btn-login:disabled{background:#9ca3af;cursor:not-allowed}
+    .login-error{color:#dc2626;font-size:13px;margin-top:10px;text-align:center;min-height:18px}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+    /* 공통 헤더 */
+    .header{background:var(--teal);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    .header-titles{flex:1;min-width:0}
+    .header-sub{font-size:11px;opacity:.75}
+    .header h2{font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .btn-icon{background:none;border:none;color:#fff;cursor:pointer;font-size:19px;padding:4px 5px;border-radius:6px;line-height:1;transition:background .15s;white-space:nowrap}
+    .btn-icon:hover{background:rgba(255,255,255,.15)}
 
-    /* ── 화면 전환 ── */
-    .screen { display: none; min-height: 100vh; flex-direction: column; }
-    .screen.active { display: flex; }
+    /* 탭바 */
+    .tab-bar{display:flex;background:#fff;border-bottom:1px solid var(--border)}
+    .tab-btn{flex:1;padding:11px 4px;border:none;background:none;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s}
+    .tab-btn.active{color:var(--teal-dark);border-bottom-color:var(--teal)}
 
-    /* ════════════════════════════
-       ① 로그인 화면
-    ════════════════════════════ */
-    #screen-login {
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(160deg, var(--teal-dark) 0%, var(--teal) 100%);
-      padding: 24px;
-    }
+    /* 검색 */
+    .search-wrap{background:#fff;padding:10px 14px;border-bottom:1px solid var(--border)}
+    .search-wrap input{width:100%;padding:9px 15px;border:1.5px solid var(--border);border-radius:24px;font-size:15px;outline:none;background:var(--bg)}
+    .search-wrap input:focus{border-color:var(--teal);background:#fff}
 
-    .login-box {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 40px 32px;
-      width: 100%;
-      max-width: 380px;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.25);
-    }
+    /* 수업 목록 */
+    .class-list{flex:1;overflow-y:auto}
+    .section-label{padding:9px 16px 5px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;background:var(--bg)}
+    .class-item{background:#fff;border-bottom:1px solid var(--border);padding:14px 18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .1s}
+    .class-item:active{background:#f0faf9}
+    .class-item.today-class{border-left:4px solid var(--teal)}
+    .class-item-name{font-size:15px;font-weight:700;color:var(--teal-dark)}
+    .class-item-sub{font-size:12px;color:var(--muted);margin-top:2px}
+    .class-item-time{font-size:11px;color:var(--teal);font-weight:600;margin-top:2px}
+    .class-count{background:var(--teal);color:#fff;border-radius:14px;padding:3px 11px;font-size:12px;font-weight:700;white-space:nowrap;margin-left:10px}
+    .class-count.today{background:var(--teal-dark)}
 
-    .login-logo { text-align: center; margin-bottom: 36px; }
-    .login-logo .logo-title {
-      font-size: 22px; font-weight: 800; color: var(--teal-dark);
-      letter-spacing: -0.5px;
-    }
-    .login-logo .logo-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    /* 출석 화면 */
+    .week-bar{background:var(--teal-dark);color:#fff;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .week-stats{font-size:12px;opacity:.9;flex:1}
+    .week-actions{display:flex;gap:7px}
+    .btn-save{padding:6px 13px;background:var(--gold);color:#3b2800;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+    .btn-reset{padding:6px 13px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 
-    .field { margin-bottom: 14px; }
-    .field label { display: block; font-size: 12px; font-weight: 700;
-      color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .field input {
-      width: 100%; padding: 13px 16px;
-      border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 16px; outline: none; transition: border-color .2s;
-    }
-    .field input:focus { border-color: var(--teal); }
+    /* 학번 입력 바 */
+    .id-input-bar{background:#fff;padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center}
+    .id-input-bar input{flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;outline:none}
+    .id-input-bar input:focus{border-color:var(--teal)}
+    .id-input-bar span{font-size:12px;color:var(--muted);white-space:nowrap}
 
-    .btn-login {
-      width: 100%; padding: 14px; margin-top: 4px;
-      background: var(--teal); color: white;
-      border: none; border-radius: 10px;
-      font-size: 16px; font-weight: 700; cursor: pointer;
-      transition: background .2s;
-    }
-    .btn-login:hover { background: var(--teal-dark); }
-    .btn-login:disabled { background: #9ca3af; cursor: not-allowed; }
+    /* 좌석 팝업 */
+    .seat-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.8);background:#fff;border-radius:20px;padding:32px 40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:999;opacity:0;transition:all .2s;pointer-events:none;min-width:220px}
+    .seat-popup.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+    .seat-popup .sp-name{font-size:20px;font-weight:800;color:var(--teal-dark);margin-bottom:6px}
+    .seat-popup .sp-label{font-size:13px;color:var(--muted);margin-bottom:10px}
+    .seat-popup .sp-seat{font-size:64px;font-weight:900;color:var(--teal);line-height:1}
+    .seat-popup .sp-sub{font-size:12px;color:var(--muted);margin-top:8px}
+    .popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:998;opacity:0;transition:opacity .2s;pointer-events:none}
+    .popup-overlay.show{opacity:1;pointer-events:auto}
 
-    .login-error { color: #dc2626; font-size: 13px; margin-top: 10px; text-align: center; min-height: 18px; }
+    /* 필터 */
+    .filter-bar{background:#fff;border-bottom:1px solid var(--border);padding:7px 12px;display:flex;gap:7px;overflow-x:auto}
+    .filter-chip{padding:5px 13px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:600;background:#fff;color:var(--muted);cursor:pointer;white-space:nowrap}
+    .filter-chip.active{background:var(--teal-dark);color:#fff;border-color:var(--teal-dark)}
 
-    /* ════════════════════════════
-       공통 헤더
-    ════════════════════════════ */
-    .header {
-      background: var(--teal); color: white;
-      padding: 14px 20px;
-      display: flex; align-items: center; gap: 12px;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    .header-titles { flex: 1; min-width: 0; }
-    .header-sub { font-size: 11px; opacity: 0.75; }
-    .header h2 { font-size: 18px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .btn-icon { background: none; border: none; color: white; cursor: pointer;
-      font-size: 20px; padding: 4px 6px; border-radius: 6px; line-height: 1;
-      transition: background .15s; }
-    .btn-icon:hover { background: rgba(255,255,255,0.15); }
+    /* 학생 카드 */
+    .student-list{flex:1;overflow-y:auto;padding:10px 12px 24px}
+    .student-card{background:#fff;border-radius:14px;border:2px solid var(--border);padding:13px 15px;margin-bottom:9px;transition:border-color .2s,box-shadow .2s}
+    .student-card.st-출석{border-color:var(--teal);box-shadow:0 2px 8px rgba(43,173,160,.15)}
+    .student-card.st-외박{border-color:#6366f1;box-shadow:0 2px 8px rgba(99,102,241,.15)}
+    .student-card.st-취소{border-color:#9ca3af}
+    .student-card.st-기타{border-color:#f59e0b;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+    .card-top{display:flex;align-items:baseline;gap:8px;margin-bottom:7px}
+    .student-name{font-size:16px;font-weight:800}
+    .student-id{font-size:12px;color:var(--muted)}
+    .student-seat{font-size:13px;font-weight:700;color:var(--teal-dark);margin-left:auto}
+    .badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+    .badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
+    .b-반{background:#dcfce7;color:#166534}
+    .b-좌석{background:#dbeafe;color:#1e40af}
+    .b-조합{background:#f3e8ff;color:#6b21a8}
+    .b-외박{background:#fff7ed;color:#c2410c}
+    .b-퀀텀{background:#fce7f3;color:#9d174d}
+    .b-성별{background:#f1f5f9;color:#475569}
+    .status-btns{display:flex;gap:5px}
+    .status-btn{flex:1;padding:8px 3px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:var(--muted)}
+    .s-출석{background:var(--teal)!important;color:#fff!important;border-color:var(--teal)!important}
+    .s-외박{background:#6366f1!important;color:#fff!important;border-color:#6366f1!important}
+    .s-취소{background:#9ca3af!important;color:#fff!important;border-color:#9ca3af!important}
+    .s-기타{background:#f59e0b!important;color:#fff!important;border-color:#f59e0b!important}
 
-    /* ════════════════════════════
-       ② 수업 선택 화면
-    ════════════════════════════ */
-    .search-wrap {
-      background: white; padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .search-wrap input {
-      width: 100%; padding: 10px 16px;
-      border: 1.5px solid var(--border); border-radius: 24px;
-      font-size: 15px; outline: none; background: var(--bg);
-    }
-    .search-wrap input:focus { border-color: var(--teal); background: white; }
+    /* 시간표 화면 */
+    .tt-toolbar{background:#fff;padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+    .btn-upload{padding:7px 14px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+    .btn-add-row{padding:7px 14px;background:#fff;color:var(--teal-dark);border:1.5px solid var(--teal);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+    .btn-save-tt{padding:7px 14px;background:var(--gold);color:#3b2800;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+    #file-input,#manual-file-input{display:none}
+    .tt-list{flex:1;overflow-y:auto;padding:10px}
+    .tt-card{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:13px;margin-bottom:9px}
+    .tt-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .tt-day-badge{font-size:13px;font-weight:800;padding:3px 11px;border-radius:20px}
+    .day-월{background:#dbeafe;color:#1e40af}
+    .day-화{background:#fce7f3;color:#9d174d}
+    .day-수{background:#dcfce7;color:#166534}
+    .day-목{background:#fff7ed;color:#c2410c}
+    .day-금{background:#f3e8ff;color:#6b21a8}
+    .day-토{background:#fef9c3;color:#713f12}
+    .day-일{background:#f1f5f9;color:#475569}
+    .btn-del{background:none;border:none;color:#dc2626;font-size:18px;cursor:pointer;padding:2px 6px}
+    .tt-fields{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .tt-field{display:flex;flex-direction:column;gap:3px}
+    .tt-field label{font-size:11px;font-weight:700;color:var(--muted)}
+    .tt-field input,.tt-field select{padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none;width:100%}
+    .tt-field input:focus,.tt-field select:focus{border-color:var(--teal)}
+    .tt-field.full{grid-column:1/-1}
 
-    .class-list { flex: 1; overflow-y: auto; }
+    /* 정기수업 설정 */
+    .reg-toolbar{background:#fff;padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:7px;align-items:center}
+    .btn-reg-save{padding:7px 16px;background:var(--gold);color:#3b2800;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+    .reg-list{flex:1;overflow-y:auto}
+    .reg-item{background:#fff;border-bottom:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer}
+    .reg-item:active{background:#f0faf9}
+    .reg-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+    .reg-check.checked{background:var(--teal);border-color:var(--teal)}
+    .reg-check.checked::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
+    .reg-info{flex:1}
+    .reg-name{font-size:15px;font-weight:700;color:var(--teal-dark)}
+    .reg-sub{font-size:12px;color:var(--muted);margin-top:2px}
 
-    .class-item {
-      background: white; border-bottom: 1px solid var(--border);
-      padding: 16px 20px; cursor: pointer;
-      display: flex; align-items: center; justify-content: space-between;
-      transition: background .1s;
-    }
-    .class-item:active { background: #f0faf9; }
-    .class-item-name { font-size: 16px; font-weight: 700; color: var(--teal-dark); }
-    .class-item-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .class-count {
-      background: var(--teal); color: white;
-      border-radius: 14px; padding: 3px 12px;
-      font-size: 12px; font-weight: 700; white-space: nowrap; margin-left: 12px;
-    }
+    /* 수동 명단 화면 */
+    .manual-header{background:#fff;padding:12px 14px;border-bottom:1px solid var(--border)}
+    .manual-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+    .manual-field{display:flex;flex-direction:column;gap:3px}
+    .manual-field label{font-size:11px;font-weight:700;color:var(--muted)}
+    .manual-field input{padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none}
+    .manual-field input:focus{border-color:var(--teal)}
+    .manual-field.full{grid-column:1/-1}
+    .manual-upload-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+    .btn-manual-upload{padding:7px 14px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+    .btn-manual-add{padding:7px 14px;background:#fff;color:var(--teal-dark);border:1.5px solid var(--teal);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+    .manual-student-input{display:flex;gap:7px;padding:10px 14px;background:#f9fafb;border-bottom:1px solid var(--border)}
+    .manual-student-input input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none}
+    .manual-student-input input:focus{border-color:var(--teal)}
+    .btn-add-student{padding:8px 14px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
 
-    /* ════════════════════════════
-       ③ 출석 체크 화면
-    ════════════════════════════ */
-    .week-bar {
-      background: var(--teal-dark); color: white;
-      padding: 10px 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 10px; flex-wrap: wrap;
-    }
-    .week-stats { font-size: 12px; opacity: 0.9; flex: 1; }
-    .week-actions { display: flex; gap: 8px; }
-
-    .btn-save {
-      padding: 7px 14px; background: var(--gold);
-      color: #3b2800; border: none; border-radius: 8px;
-      font-size: 13px; font-weight: 700; cursor: pointer;
-      white-space: nowrap;
-    }
-    .btn-reset {
-      padding: 7px 14px; background: rgba(255,255,255,0.15);
-      color: white; border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .student-list { flex: 1; overflow-y: auto; padding: 10px 12px 24px; }
-
-    .student-card {
-      background: white; border-radius: 14px;
-      border: 2px solid var(--border);
-      padding: 14px 16px; margin-bottom: 10px;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .student-card.st-출석 { border-color: var(--teal);     box-shadow: 0 2px 8px rgba(43,173,160,.15); }
-    .student-card.st-외박 { border-color: #6366f1;          box-shadow: 0 2px 8px rgba(99,102,241,.15); }
-    .student-card.st-취소 { border-color: #9ca3af;          box-shadow: none; }
-    .student-card.st-기타 { border-color: #f59e0b;          box-shadow: 0 2px 8px rgba(245,158,11,.15); }
-
-    .card-top { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
-    .student-name { font-size: 17px; font-weight: 800; }
-    .student-id   { font-size: 12px; color: var(--muted); }
-
-    .badges { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
-    .badge {
-      font-size: 11px; font-weight: 600;
-      padding: 3px 9px; border-radius: 20px;
-    }
-    .b-반   { background: #dcfce7; color: #166534; }
-    .b-좌석 { background: #dbeafe; color: #1e40af; }
-    .b-조합 { background: #f3e8ff; color: #6b21a8; }
-    .b-외박 { background: #fff7ed; color: #c2410c; }
-    .b-퀀텀 { background: #fce7f3; color: #9d174d; }
-    .b-성별 { background: #f1f5f9; color: #475569; }
-
-    .status-btns { display: flex; gap: 6px; }
-    .status-btn {
-      flex: 1; padding: 9px 4px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px; font-size: 13px; font-weight: 700;
-      cursor: pointer; background: white; color: var(--muted);
-      transition: all .15s;
-    }
-    .status-btn:hover { filter: brightness(0.95); }
-    .s-출석 { background: var(--teal)  !important; color: white !important; border-color: var(--teal)  !important; }
-    .s-외박 { background: #6366f1       !important; color: white !important; border-color: #6366f1       !important; }
-    .s-취소 { background: #9ca3af       !important; color: white !important; border-color: #9ca3af       !important; }
-    .s-기타 { background: #f59e0b       !important; color: white !important; border-color: #f59e0b       !important; }
-
-    /* ── 공통 유틸 ── */
-    .loading {
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; padding: 60px 20px; gap: 16px; color: var(--muted);
-    }
-    .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid var(--border); border-top-color: var(--teal);
-      border-radius: 50%; animation: spin .8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .empty { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 14px; line-height: 1.8; }
-    .retry-btn {
-      margin-top: 12px; padding: 9px 20px;
-      background: var(--teal); color: white;
-      border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
-    }
+    /* 유틸 */
+    .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;color:var(--muted)}
+    .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .empty{text-align:center;padding:48px 20px;color:var(--muted);font-size:14px;line-height:1.8}
+    .retry-btn{margin-top:12px;padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
   </style>
 </head>
 <body>
 
-<!-- ════════ ① 로그인 ════════ -->
+<!-- 로그인 -->
 <div id="screen-login" class="screen active">
   <div class="login-box">
     <div class="login-logo">
@@ -231,28 +189,33 @@
   </div>
 </div>
 
-<!-- ════════ ② 수업 선택 ════════ -->
+<!-- 홈 -->
 <div id="screen-home" class="screen">
   <div class="header">
     <div class="header-titles">
       <div class="header-sub">강남대성기숙 QUETTA</div>
       <h2>출석부</h2>
     </div>
-    <span id="home-week" style="font-size:12px;opacity:.8;white-space:nowrap"></span>
-    <button class="btn-icon" id="btn-refresh" title="새로고침">↺</button>
-    <button class="btn-icon" id="btn-logout" title="로그아웃">⏻</button>
+    <span id="home-week" style="font-size:11px;opacity:.8;white-space:nowrap"></span>
+    <button class="btn-icon" id="btn-refresh">↺</button>
+    <button class="btn-icon" id="btn-go-regular">★</button>
+    <button class="btn-icon" id="btn-go-timetable">📅</button>
+    <button class="btn-icon" id="btn-go-manual">📋</button>
+    <button class="btn-icon" id="btn-logout">⏻</button>
   </div>
-
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-today">오늘 수업</button>
+    <button class="tab-btn" id="tab-all">전체 수업</button>
+  </div>
   <div class="search-wrap">
-    <input type="search" id="class-search" placeholder="수업 검색 (예: K국어S, 탐구A...)">
+    <input type="search" id="class-search" placeholder="수업 검색...">
   </div>
-
   <div class="class-list" id="class-list">
     <div class="loading"><div class="spinner"></div><span>데이터 불러오는 중...</span></div>
   </div>
 </div>
 
-<!-- ════════ ③ 출석 체크 ════════ -->
+<!-- 출석 체크 -->
 <div id="screen-attendance" class="screen">
   <div class="header">
     <button class="btn-icon" id="btn-back">←</button>
@@ -262,360 +225,586 @@
     </div>
     <span id="att-week" style="font-size:11px;opacity:.8;white-space:nowrap"></span>
   </div>
-
   <div class="week-bar">
     <span class="week-stats" id="att-stats">집계 중...</span>
     <div class="week-actions">
-      <button class="btn-save"  id="btn-save-week">주 마감</button>
+      <button class="btn-save" id="btn-save-week">주 마감</button>
       <button class="btn-reset" id="btn-reset-week">리셋</button>
     </div>
   </div>
-
+  <div class="id-input-bar">
+    <input type="number" id="id-input" placeholder="학번 입력 후 Enter" inputmode="numeric">
+    <span>→ 자동 출석</span>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-chip active" id="filter-all">전체</button>
+    <button class="filter-chip" id="filter-unchecked">미출석만</button>
+    <button class="filter-chip" id="filter-checked">체크 완료</button>
+  </div>
   <div class="student-list" id="student-list"></div>
 </div>
 
-<!-- Firebase SDK (compat) -->
+<!-- 시간표 관리 -->
+<div id="screen-timetable" class="screen">
+  <div class="header">
+    <button class="btn-icon" id="btn-tt-back">←</button>
+    <div class="header-titles">
+      <div class="header-sub">강남대성기숙 QUETTA</div>
+      <h2>시간표 관리</h2>
+    </div>
+  </div>
+  <div class="tt-toolbar">
+    <button class="btn-upload" onclick="document.getElementById('file-input').click()">📂 엑셀 업로드</button>
+    <input type="file" id="file-input" accept=".xlsx,.xls">
+    <button class="btn-add-row" id="btn-add-row">+ 수업 추가</button>
+    <button class="btn-save-tt" id="btn-save-tt">💾 저장</button>
+  </div>
+  <div class="tt-list" id="tt-list">
+    <div class="empty">시간표가 없습니다.</div>
+  </div>
+</div>
+
+<!-- 정기수업 설정 -->
+<div id="screen-regular" class="screen">
+  <div class="header">
+    <button class="btn-icon" id="btn-reg-back">←</button>
+    <div class="header-titles">
+      <div class="header-sub">오늘 탭에 표시할 수업</div>
+      <h2>정기수업 설정</h2>
+    </div>
+  </div>
+  <div class="reg-toolbar">
+    <span style="font-size:13px;color:var(--muted);flex:1">체크한 수업이 오늘 탭에 표시됩니다</span>
+    <button class="btn-reg-save" id="btn-reg-save">💾 저장</button>
+  </div>
+  <div class="reg-list" id="reg-list">
+    <div class="loading"><div class="spinner"></div><span>불러오는 중...</span></div>
+  </div>
+</div>
+
+<!-- 수동 명단 -->
+<div id="screen-manual" class="screen">
+  <div class="header">
+    <button class="btn-icon" id="btn-manual-back">←</button>
+    <div class="header-titles">
+      <div class="header-sub">강남대성기숙 QUETTA</div>
+      <h2>수동 명단 출석</h2>
+    </div>
+  </div>
+  <div class="manual-header">
+    <div class="manual-fields">
+      <div class="manual-field full">
+        <label>제목</label>
+        <input id="manual-title" placeholder="예: 3월 전체 모의고사">
+      </div>
+      <div class="manual-field">
+        <label>시간</label>
+        <input id="manual-time" placeholder="예: 09:00~12:00">
+      </div>
+      <div class="manual-field">
+        <label>강의실</label>
+        <input id="manual-room" placeholder="예: 203호">
+      </div>
+      <div class="manual-field full">
+        <label>선생님</label>
+        <input id="manual-teacher" placeholder="예: 김한솔">
+      </div>
+    </div>
+    <div class="manual-upload-row">
+      <button class="btn-manual-upload" onclick="document.getElementById('manual-file-input').click()">📂 학번 엑셀 업로드</button>
+      <input type="file" id="manual-file-input" accept=".xlsx,.xls">
+      <button class="btn-manual-add" id="btn-show-manual-input">+ 학번 직접 추가</button>
+    </div>
+  </div>
+  <div class="manual-student-input" id="manual-input-row" style="display:none">
+    <input type="number" id="manual-id-input" placeholder="학번 입력" inputmode="numeric">
+    <input type="text" id="manual-seat-input" placeholder="좌석 (선택)" style="max-width:100px">
+    <button class="btn-add-student" id="btn-add-manual-student">추가</button>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-chip active" id="mfilter-all">전체</button>
+    <button class="filter-chip" id="mfilter-unchecked">미출석만</button>
+    <button class="filter-chip" id="mfilter-checked">체크 완료</button>
+  </div>
+  <div class="student-list" id="manual-student-list">
+    <div class="empty">학번을 업로드하거나 직접 추가해주세요.</div>
+  </div>
+</div>
+
+<!-- 좌석 팝업 -->
+<div class="popup-overlay" id="popup-overlay" onclick="closeSeatPopup()"></div>
+<div class="seat-popup" id="seat-popup">
+  <div class="sp-name" id="sp-name"></div>
+  <div class="sp-label">수업 좌석번호</div>
+  <div class="sp-seat" id="sp-seat"></div>
+  <div class="sp-sub" id="sp-sub"></div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// ═══════════════════════════════
-// 설정
-// ═══════════════════════════════
-const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyChC7cRYAii31ac8yUEZA8Rex5CgpZECWQ",
-  authDomain:        "quetta-attendance.firebaseapp.com",
-  databaseURL:       "https://quetta-attendance-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:         "quetta-attendance",
-  storageBucket:     "quetta-attendance.firebasestorage.app",
-  messagingSenderId: "669499495003",
-  appId:             "1:669499495003:web:b4d262a6123945e45d257e"
-};
+const FIREBASE_CONFIG={apiKey:"AIzaSyChC7cRYAii31ac8yUEZA8Rex5CgpZECWQ",authDomain:"quetta-attendance.firebaseapp.com",databaseURL:"https://quetta-attendance-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"quetta-attendance",storageBucket:"quetta-attendance.firebasestorage.app",messagingSenderId:"669499495003",appId:"1:669499495003:web:b4d262a6123945e45d257e"};
+const API_URL='https://script.google.com/macros/s/AKfycbyaAGeW3InehpzQBshX6Hs5Kk1Jx-YeNvxjQxKVWJqhyjq9FP9LMBkkbQu8w3NgjHLE/exec';
+const API_SECRET='quetta2026';
+const LOGIN_EMAIL='campusk@dshw.co.kr';
+const DAYS=['일','월','화','수','목','금','토'];
 
-const API_URL     = 'https://script.google.com/macros/s/AKfycbyaAGeW3InehpzQBshX6Hs5Kk1Jx-YeNvxjQxKVWJqhyjq9FP9LMBkkbQu8w3NgjHLE/exec';
-const API_SECRET  = 'quetta2026';
-const LOGIN_EMAIL = 'campusk@dshw.co.kr';
-
-// ═══════════════════════════════
-// Firebase 초기화
-// ═══════════════════════════════
 firebase.initializeApp(FIREBASE_CONFIG);
-const auth = firebase.auth();
-const db   = firebase.database();
+const auth=firebase.auth();
+const db=firebase.database();
 
-// ═══════════════════════════════
-// 전역 상태
-// ═══════════════════════════════
-let allStudents    = {};
-let allClasses     = [];
-let selectedClass  = null;
-let attendanceRef  = null;
-let attendanceData = {};
-const weekKey      = getWeekKey();
+let allStudents={};
+let allClasses=[];
+let timetable=[];
+let regularClasses=new Set();
+let selectedClass=null;
+let attendanceRef=null;
+let attendanceData={};
+let filterMode='all';
+let tabMode='today';
+let manualStudents=[];
+let manualAttendance={};
+let manualFilter='all';
+const weekKey=getWeekKey();
 
-// ═══════════════════════════════
-// 유틸
-// ═══════════════════════════════
-function getWeekKey() {
-  const d   = new Date();
-  const day = d.getDay() || 7;
-  d.setDate(d.getDate() + 4 - day);
-  const y     = d.getFullYear();
-  const start = new Date(y, 0, 1);
-  const w     = Math.ceil((((d - start) / 86400000) + 1) / 7);
-  return `${y}-W${String(w).padStart(2, '0')}`;
+function getWeekKey(){const d=new Date(),day=d.getDay()||7;d.setDate(d.getDate()+4-day);const y=d.getFullYear(),start=new Date(y,0,1),w=Math.ceil((((d-start)/86400000)+1)/7);return`${y}-W${String(w).padStart(2,'0')}`}
+function weekLabel(k){const[y,w]=k.split('-W');return`${y}년 ${parseInt(w)}주차`}
+function sanitizeKey(s){return s.replace(/[.#$[\]/\s]/g,'_')}
+function todayDay(){return DAYS[new Date().getDay()]}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+// ── 로그인 ──
+const btnLogin=document.getElementById('btn-login');
+const pwInput=document.getElementById('pw-input');
+const loginErr=document.getElementById('login-error');
+btnLogin.addEventListener('click',doLogin);
+pwInput.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+async function doLogin(){
+  const pw=pwInput.value.trim();
+  if(!pw){loginErr.textContent='비밀번호를 입력해주세요.';return}
+  btnLogin.disabled=true;btnLogin.textContent='로그인 중...';loginErr.textContent='';
+  try{await auth.signInWithEmailAndPassword(LOGIN_EMAIL,pw)}
+  catch{loginErr.textContent='비밀번호가 올바르지 않습니다.';btnLogin.disabled=false;btnLogin.textContent='로그인'}
 }
-
-function weekLabel(k) {
-  const [y, w] = k.split('-W');
-  return `${y}년 ${parseInt(w)}주차`;
-}
-
-function sanitizeKey(s) {
-  return s.replace(/[.#$[\]/\s]/g, '_');
-}
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// ═══════════════════════════════
-// 로그인
-// ═══════════════════════════════
-const btnLogin  = document.getElementById('btn-login');
-const pwInput   = document.getElementById('pw-input');
-const loginErr  = document.getElementById('login-error');
-
-btnLogin.addEventListener('click', doLogin);
-pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-
-async function doLogin() {
-  const pw = pwInput.value.trim();
-  if (!pw) { loginErr.textContent = '비밀번호를 입력해주세요.'; return; }
-  btnLogin.disabled    = true;
-  btnLogin.textContent = '로그인 중...';
-  loginErr.textContent = '';
-  try {
-    await auth.signInWithEmailAndPassword(LOGIN_EMAIL, pw);
-  } catch {
-    loginErr.textContent     = '비밀번호가 올바르지 않습니다.';
-    btnLogin.disabled        = false;
-    btnLogin.textContent     = '로그인';
-  }
-}
-
-document.getElementById('btn-logout').addEventListener('click', () => {
-  if (confirm('로그아웃 하시겠어요?')) auth.signOut();
-});
-
-// ═══════════════════════════════
-// 인증 상태 감지
-// ═══════════════════════════════
-auth.onAuthStateChanged(user => {
-  if (user) {
+document.getElementById('btn-logout').addEventListener('click',()=>{if(confirm('로그아웃?'))auth.signOut()});
+auth.onAuthStateChanged(user=>{
+  if(user){
     showScreen('screen-home');
-    document.getElementById('home-week').textContent = weekLabel(weekKey);
-    if (!Object.keys(allStudents).length) loadStudents();
-  } else {
-    showScreen('screen-login');
-    btnLogin.disabled    = false;
-    btnLogin.textContent = '로그인';
-    pwInput.value        = '';
+    document.getElementById('home-week').textContent=weekLabel(weekKey);
+    if(!Object.keys(allStudents).length)loadStudents();
+    loadTimetable();loadRegularClasses();
+  }else{
+    showScreen('screen-login');btnLogin.disabled=false;btnLogin.textContent='로그인';pwInput.value='';
   }
 });
 
-// ═══════════════════════════════
-// 학생 데이터 로드
-// ═══════════════════════════════
-document.getElementById('btn-refresh').addEventListener('click', loadStudents);
-
-async function loadStudents() {
-  const list = document.getElementById('class-list');
-  list.innerHTML = '<div class="loading"><div class="spinner"></div><span>데이터 불러오는 중...</span></div>';
-
-  try {
-    const res  = await fetch(`${API_URL}?token=${API_SECRET}`);
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || '오류');
-
-    allStudents = json.students;
-    buildClasses();
-    renderClasses('');
-  } catch (err) {
-    list.innerHTML = `
-      <div class="empty">
-        ❌ 데이터 로드 실패<br>${err.message}
-        <br><button class="retry-btn" onclick="loadStudents()">다시 시도</button>
-      </div>`;
+// ── 학생 데이터 ──
+document.getElementById('btn-refresh').addEventListener('click',loadStudents);
+async function loadStudents(){
+  const list=document.getElementById('class-list');
+  list.innerHTML='<div class="loading"><div class="spinner"></div><span>데이터 불러오는 중...</span></div>';
+  try{
+    const res=await fetch(`${API_URL}?token=${API_SECRET}`);
+    const json=await res.json();
+    if(!json.ok)throw new Error(json.error||'오류');
+    allStudents=json.students;
+    buildClasses();renderClasses();
+  }catch(err){
+    list.innerHTML=`<div class="empty">데이터 로드 실패<br>${err.message}<br><button class="retry-btn" onclick="loadStudents()">다시 시도</button></div>`;
   }
 }
-
-// ═══════════════════════════════
-// 수업 목록 구성
-// ═══════════════════════════════
-function buildClasses() {
-  const map = {};
-  for (const 학번 in allStudents) {
-    (allStudents[학번].수업목록 || []).forEach(u => {
-      if (!u.그룹명) return;
-      if (!map[u.그룹명]) map[u.그룹명] = { count: 0, subjects: new Set() };
+function buildClasses(){
+  const map={};
+  for(const 학번 in allStudents){
+    (allStudents[학번].수업목록||[]).forEach(u=>{
+      if(!u.그룹명)return;
+      if(!map[u.그룹명])map[u.그룹명]={count:0,subjects:new Set()};
       map[u.그룹명].count++;
-      if (u.과목명) map[u.그룹명].subjects.add(u.과목명);
+      if(u.과목명)map[u.그룹명].subjects.add(u.과목명);
     });
   }
-  allClasses = Object.entries(map)
-    .map(([그룹명, v]) => ({ 그룹명, count: v.count, subjects: [...v.subjects].join(', ') }))
-    .sort((a, b) => a.그룹명.localeCompare(b.그룹명, 'ko'));
+  allClasses=Object.entries(map).map(([그룹명,v])=>({그룹명,count:v.count,subjects:[...v.subjects].join(', ')})).sort((a,b)=>a.그룹명.localeCompare(b.그룹명,'ko'));
 }
 
-function renderClasses(q) {
-  const list     = document.getElementById('class-list');
-  const filtered = q
-    ? allClasses.filter(c =>
-        c.그룹명.toLowerCase().includes(q.toLowerCase()) ||
-        c.subjects.toLowerCase().includes(q.toLowerCase()))
-    : allClasses;
+// ── 탭 ──
+document.getElementById('tab-today').addEventListener('click',()=>{tabMode='today';document.getElementById('tab-today').classList.add('active');document.getElementById('tab-all').classList.remove('active');document.getElementById('class-search').value='';renderClasses()});
+document.getElementById('tab-all').addEventListener('click',()=>{tabMode='all';document.getElementById('tab-all').classList.add('active');document.getElementById('tab-today').classList.remove('active');document.getElementById('class-search').value='';renderClasses()});
+document.getElementById('class-search').addEventListener('input',e=>renderClasses(e.target.value.trim()));
 
-  if (!filtered.length) { list.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>'; return; }
+function getTodayGroups(){return new Set(timetable.filter(t=>t.요일===todayDay()).map(t=>t.그룹))}
 
-  list.innerHTML = filtered.map((c, i) => `
-    <div class="class-item" onclick="openClassByIndex(${i})">
-      <div>
-        <div class="class-item-name">${c.그룹명}</div>
-        <div class="class-item-sub">${c.subjects}</div>
-      </div>
-      <span class="class-count">${c.count}명</span>
-    </div>`).join('');
-  window._filteredClasses = filtered;
-}
+function renderClasses(q=''){
+  const list=document.getElementById('class-list');
+  if(!allClasses.length)return;
+  const today=todayDay();
+  const todayTimetableGroups=getTodayGroups();
 
-document.getElementById('class-search').addEventListener('input', e => renderClasses(e.target.value.trim()));
+  // 오늘 탭: 정기수업 중 오늘 요일 시간표에 있는 것 OR 정기수업+시간표 없으면 정기수업만
+  if(tabMode==='today'&&!q){
+    // 정기수업 설정된 것 중 오늘 요일 시간표에 있는 것 우선, 없으면 정기수업 전체
+    let todayItems=timetable.filter(t=>t.요일===today&&regularClasses.has(t.그룹)).sort((a,b)=>a.시간.localeCompare(b.시간));
+    // 시간표에 없지만 정기수업인 것도 추가
+    const inTimetable=new Set(todayItems.map(t=>t.그룹));
+    const extraRegular=allClasses.filter(c=>regularClasses.has(c.그룹명)&&!inTimetable.has(c.그룹명));
 
-// ═══════════════════════════════
-// 수업 열기
-// ═══════════════════════════════
-function openClassByIndex(i) {
-  const c = window._filteredClasses[i];
-  if (c) openClass(c.그룹명);
-}
-
-function openClass(그룹명) {
-  selectedClass = 그룹명;
-
-  const subjects = new Set();
-  for (const 학번 in allStudents) {
-    (allStudents[학번].수업목록 || []).forEach(u => {
-      if (u.그룹명 === 그룹명) subjects.add(u.과목명);
-    });
-  }
-
-  document.getElementById('att-class-name').textContent = 그룹명;
-  document.getElementById('att-subject').textContent    = [...subjects].join(' / ');
-  document.getElementById('att-week').textContent       = weekLabel(weekKey);
-  showScreen('screen-attendance');
-  listenAttendance();
-}
-
-document.getElementById('btn-back').addEventListener('click', () => {
-  if (attendanceRef) { attendanceRef.off(); attendanceRef = null; }
-  showScreen('screen-home');
-});
-
-// ═══════════════════════════════
-// 실시간 출석 데이터
-// ═══════════════════════════════
-function listenAttendance() {
-  document.getElementById('student-list').innerHTML =
-    '<div class="loading"><div class="spinner"></div><span>불러오는 중...</span></div>';
-
-  if (attendanceRef) attendanceRef.off();
-
-  const path = `attendance/${weekKey}/${sanitizeKey(selectedClass)}`;
-  attendanceRef = db.ref(path);
-  attendanceRef.on('value', snap => {
-    attendanceData = snap.val() || {};
-    renderStudents();
-    updateStats();
-  });
-}
-
-// ═══════════════════════════════
-// 학생 카드 렌더링
-// ═══════════════════════════════
-function renderStudents() {
-  const list     = document.getElementById('student-list');
-  const students = [];
-
-  for (const 학번 in allStudents) {
-    const s    = allStudents[학번];
-    const 수업 = (s.수업목록 || []).find(u => u.그룹명 === selectedClass);
-    if (수업) students.push({ ...s, 해당수업: 수업 });
-  }
-
-  students.sort((a, b) => {
-    if (a.반 !== b.반) return a.반.localeCompare(b.반, 'ko');
-    return a.성명.localeCompare(b.성명, 'ko');
-  });
-
-  if (!students.length) {
-    list.innerHTML = '<div class="empty">해당 수업 학생이 없습니다.</div>';
+    if(!todayItems.length&&!extraRegular.length){
+      list.innerHTML=`<div class="empty">오늘(${today}요일) 정기수업이 없습니다.<br>★ 정기수업 설정에서 수업을 체크해주세요.</div>`;
+      return;
+    }
+    window._todayTimetable=todayItems;
+    window._extraRegular=extraRegular;
+    let html=`<div class="section-label">오늘 ${today}요일 정기수업</div>`;
+    html+=todayItems.map((t,i)=>{
+      const cls=allClasses.find(c=>c.그룹명===t.그룹)||{count:'?'};
+      return`<div class="class-item today-class" onclick="openClassByTT(${i})">
+        <div>
+          <div class="class-item-name">${t.그룹}</div>
+          <div class="class-item-sub">${t.과목||''}${t.선생님?' · '+t.선생님:''}${t.강의실?' · '+t.강의실:''}</div>
+          <div class="class-item-time">${t.시간||''}</div>
+        </div>
+        <span class="class-count today">${cls.count}명</span>
+      </div>`;
+    }).join('');
+    if(extraRegular.length){
+      window._filteredClasses=(window._filteredClasses||[]);
+      html+=extraRegular.map((c,i)=>{
+        const idx=1000+i;
+        return`<div class="class-item today-class" onclick="openClassExtra(${i})">
+          <div><div class="class-item-name">${c.그룹명}</div><div class="class-item-sub">${c.subjects}</div></div>
+          <span class="class-count today">${c.count}명</span>
+        </div>`;
+      }).join('');
+    }
+    list.innerHTML=html;
     return;
   }
 
-  list.innerHTML = students.map(s => {
-    const status = (attendanceData[s.학번] || {}).status || '';
-    const { 좌석, 조합 } = s.해당수업;
+  // 전체 탭
+  let filtered=q?allClasses.filter(c=>c.그룹명.toLowerCase().includes(q.toLowerCase())||c.subjects.toLowerCase().includes(q.toLowerCase())):allClasses;
+  if(!filtered.length){list.innerHTML='<div class="empty">검색 결과가 없습니다.</div>';return}
 
-    return `
-    <div class="student-card${status ? ' st-' + status : ''}" id="card-${s.학번}">
+  let html='';
+  if(!q){
+    const todayList=filtered.filter(c=>regularClasses.has(c.그룹명)&&todayTimetableGroups.has(c.그룹명));
+    const regList=filtered.filter(c=>regularClasses.has(c.그룹명)&&!todayTimetableGroups.has(c.그룹명));
+    const otherList=filtered.filter(c=>!regularClasses.has(c.그룹명));
+    window._filteredClasses=[...todayList,...regList,...otherList];
+    if(todayList.length){html+=`<div class="section-label">오늘(${today}) 정기수업</div>`;html+=todayList.map((c,i)=>classItemHTML(c,i,true)).join('')}
+    if(regList.length){html+=`<div class="section-label">정기수업</div>`;html+=regList.map((c,i)=>classItemHTML(c,todayList.length+i,false)).join('')}
+    if(otherList.length){html+=`<div class="section-label">전체 수업</div>`;html+=otherList.map((c,i)=>classItemHTML(c,todayList.length+regList.length+i,false)).join('')}
+  }else{
+    window._filteredClasses=filtered;
+    html=filtered.map((c,i)=>classItemHTML(c,i,regularClasses.has(c.그룹명)&&getTodayGroups().has(c.그룹명))).join('');
+  }
+  list.innerHTML=html;
+}
+
+function classItemHTML(c,i,isToday){
+  const tt=timetable.find(t=>t.그룹===c.그룹명);
+  const timeSub=tt?`<div class="class-item-time">${tt.요일} ${tt.시간}${tt.강의실?' · '+tt.강의실:''}</div>`:'';
+  return`<div class="class-item${isToday?' today-class':''}" onclick="openClassByIndex(${i})">
+    <div><div class="class-item-name">${c.그룹명}</div><div class="class-item-sub">${c.subjects}</div>${timeSub}</div>
+    <span class="class-count${isToday?' today':''}">${c.count}명</span>
+  </div>`;
+}
+
+function openClassByIndex(i){const c=window._filteredClasses[i];if(c)openClass(c.그룹명)}
+function openClassByTT(i){const t=window._todayTimetable[i];if(t)openClass(t.그룹)}
+function openClassExtra(i){const c=window._extraRegular[i];if(c)openClass(c.그룹명)}
+
+function openClass(그룹명){
+  selectedClass=그룹명;filterMode='all';
+  document.querySelectorAll('#screen-attendance .filter-chip').forEach(b=>b.classList.remove('active'));
+  document.getElementById('filter-all').classList.add('active');
+  const tt=timetable.find(t=>t.그룹===그룹명);
+  document.getElementById('att-class-name').textContent=그룹명;
+  document.getElementById('att-subject').textContent=tt?`${tt.요일} ${tt.시간}${tt.강의실?' · '+tt.강의실:''}${tt.선생님?' · '+tt.선생님:''}`:'';
+  document.getElementById('att-week').textContent=weekLabel(weekKey);
+  document.getElementById('id-input').value='';
+  showScreen('screen-attendance');
+  listenAttendance();
+}
+document.getElementById('btn-back').addEventListener('click',()=>{if(attendanceRef){attendanceRef.off();attendanceRef=null}showScreen('screen-home')});
+
+// ── 학번 입력 자동 출석 ──
+document.getElementById('id-input').addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const val=e.target.value.trim();
+  if(!val)return;
+  const student=allStudents[val];
+  if(!student){alert('해당 학번의 학생을 찾을 수 없습니다.');e.target.select();return}
+  const 수업=(student.수업목록||[]).find(u=>u.그룹명===selectedClass);
+  if(!수업){alert(`${student.성명} 학생은 이 수업 수강생이 아닙니다.`);e.target.select();return}
+  const path=`attendance/${weekKey}/${sanitizeKey(selectedClass)}/${val}`;
+  db.ref(path).set({status:'출석',updated_at:Date.now()});
+  showSeatPopup(student,수업);
+  e.target.value='';
+});
+
+function showSeatPopup(student,수업){
+  document.getElementById('sp-name').textContent=student.성명;
+  document.getElementById('sp-seat').textContent=수업.좌석||'-';
+  document.getElementById('sp-sub').textContent=`${student.반||''} ${student.성별||''} · 퀀텀 ${student.퀀텀자리||'-'}`;
+  document.getElementById('seat-popup').classList.add('show');
+  document.getElementById('popup-overlay').classList.add('show');
+  clearTimeout(window._popupTimer);
+  window._popupTimer=setTimeout(closeSeatPopup,3000);
+}
+function closeSeatPopup(){
+  document.getElementById('seat-popup').classList.remove('show');
+  document.getElementById('popup-overlay').classList.remove('show');
+}
+
+// ── 필터 ──
+document.getElementById('filter-all').addEventListener('click',()=>setFilter('all'));
+document.getElementById('filter-unchecked').addEventListener('click',()=>setFilter('unchecked'));
+document.getElementById('filter-checked').addEventListener('click',()=>setFilter('checked'));
+function setFilter(mode){
+  filterMode=mode;
+  document.querySelectorAll('#screen-attendance .filter-chip').forEach(b=>b.classList.remove('active'));
+  document.getElementById('filter-'+mode).classList.add('active');
+  renderStudents();
+}
+
+// ── 출석 데이터 ──
+function listenAttendance(){
+  document.getElementById('student-list').innerHTML='<div class="loading"><div class="spinner"></div><span>불러오는 중...</span></div>';
+  if(attendanceRef)attendanceRef.off();
+  attendanceRef=db.ref(`attendance/${weekKey}/${sanitizeKey(selectedClass)}`);
+  attendanceRef.on('value',snap=>{attendanceData=snap.val()||{};renderStudents();updateStats()});
+}
+
+function renderStudents(){
+  const list=document.getElementById('student-list');
+  let students=[];
+  for(const 학번 in allStudents){
+    const s=allStudents[학번];
+    const 수업=(s.수업목록||[]).find(u=>u.그룹명===selectedClass);
+    if(수업)students.push({...s,해당수업:수업});
+  }
+  students.sort((a,b)=>a.반!==b.반?a.반.localeCompare(b.반,'ko'):a.성명.localeCompare(b.성명,'ko'));
+  if(filterMode==='unchecked')students=students.filter(s=>!(attendanceData[s.학번]||{}).status);
+  else if(filterMode==='checked')students=students.filter(s=>!!(attendanceData[s.학번]||{}).status);
+  if(!students.length){list.innerHTML=`<div class="empty">${filterMode==='unchecked'?'미출석 학생이 없습니다 ✅':'해당 수업 학생이 없습니다.'}</div>`;return}
+  list.innerHTML=students.map(s=>{
+    const status=(attendanceData[s.학번]||{}).status||'';
+    const{좌석,조합}=s.해당수업;
+    return`<div class="student-card${status?' st-'+status:''}">
       <div class="card-top">
         <span class="student-name">${s.성명}</span>
         <span class="student-id">${s.학번}</span>
+        ${좌석?`<span class="student-seat">좌석 ${좌석}</span>`:''}
       </div>
       <div class="badges">
-        ${s.반      ? `<span class="badge b-반">${s.반}</span>`           : ''}
-        ${s.성별    ? `<span class="badge b-성별">${s.성별}</span>`       : ''}
-        ${좌석      ? `<span class="badge b-좌석">좌석 ${좌석}</span>`    : ''}
-        ${조합      ? `<span class="badge b-조합">${조합}</span>`         : ''}
-        ${s.외박여부? `<span class="badge b-외박">외박 ${s.외박여부}</span>` : ''}
-        ${s.퀀텀자리? `<span class="badge b-퀀텀">퀀텀 ${s.퀀텀자리}</span>` : ''}
+        ${s.반?`<span class="badge b-반">${s.반}</span>`:''}
+        ${s.성별?`<span class="badge b-성별">${s.성별}</span>`:''}
+        ${조합?`<span class="badge b-조합">${조합}</span>`:''}
+        ${s.외박여부?`<span class="badge b-외박">외박 ${s.외박여부}</span>`:''}
+        ${s.퀀텀자리?`<span class="badge b-퀀텀">퀀텀 ${s.퀀텀자리}</span>`:''}
       </div>
       <div class="status-btns">
-        ${['출석','외박','취소','기타'].map(st => `
-          <button class="status-btn${status === st ? ' s-'+st : ''}"
-            onclick="setStatus('${s.학번}','${st}')">
-            ${st}
-          </button>`).join('')}
+        ${['출석','외박','취소','기타'].map(st=>`<button class="status-btn${status===st?' s-'+st:''}" onclick="setStatus('${s.학번}','${st}')">${st}</button>`).join('')}
       </div>
     </div>`;
   }).join('');
 }
 
-// ═══════════════════════════════
-// 출석 상태 저장 (토글)
-// ═══════════════════════════════
-function setStatus(학번, status) {
-  const path    = `attendance/${weekKey}/${sanitizeKey(selectedClass)}/${학번}`;
-  const current = (attendanceData[학번] || {}).status;
-
-  if (current === status) {
-    db.ref(path).remove();
-  } else {
-    db.ref(path).set({ status, updated_at: Date.now() });
-  }
+function setStatus(학번,status){
+  const path=`attendance/${weekKey}/${sanitizeKey(selectedClass)}/${학번}`;
+  const current=(attendanceData[학번]||{}).status;
+  if(current===status)db.ref(path).remove();
+  else db.ref(path).set({status,updated_at:Date.now()});
 }
 
-// ═══════════════════════════════
-// 통계
-// ═══════════════════════════════
-function updateStats() {
-  const c = { 출석: 0, 외박: 0, 취소: 0, 기타: 0, 미체크: 0 };
-  let total = 0;
-
-  for (const 학번 in allStudents) {
-    if (!(allStudents[학번].수업목록 || []).find(u => u.그룹명 === selectedClass)) continue;
+function updateStats(){
+  const c={출석:0,외박:0,취소:0,기타:0,미체크:0};let total=0;
+  for(const 학번 in allStudents){
+    if(!(allStudents[학번].수업목록||[]).find(u=>u.그룹명===selectedClass))continue;
     total++;
-    const st = (attendanceData[학번] || {}).status;
-    st ? c[st]++ : c['미체크']++;
+    const st=(attendanceData[학번]||{}).status;
+    st?c[st]++:c['미체크']++;
   }
-
-  document.getElementById('att-stats').textContent =
-    `전체 ${total} | 출석 ${c.출석}  외박 ${c.외박}  취소 ${c.취소}  기타 ${c.기타}  미체크 ${c.미체크}`;
+  document.getElementById('att-stats').textContent=`전체 ${total} | 출석 ${c.출석}  외박 ${c.외박}  취소 ${c.취소}  기타 ${c.기타}  미체크 ${c.미체크}`;
 }
 
-// ═══════════════════════════════
-// 주 마감 저장
-// ═══════════════════════════════
-document.getElementById('btn-save-week').addEventListener('click', async () => {
-  if (!confirm(`${weekLabel(weekKey)} 전체 출석을 저장할까요?\n(저장 후에도 데이터는 유지됩니다)`)) return;
-  try {
-    const snap = await db.ref(`attendance/${weekKey}`).get();
-    if (snap.exists()) {
-      await db.ref(`weekly_archive/${weekKey}`).set({
-        saved_at: Date.now(),
-        data: snap.val(),
-      });
-    }
-    alert(`✅ ${weekLabel(weekKey)} 저장 완료!`);
-  } catch (err) {
-    alert('저장 실패: ' + err.message);
-  }
+document.getElementById('btn-save-week').addEventListener('click',async()=>{
+  if(!confirm(`${weekLabel(weekKey)} 전체 출석을 저장할까요?`))return;
+  try{const snap=await db.ref(`attendance/${weekKey}`).get();if(snap.exists())await db.ref(`weekly_archive/${weekKey}`).set({saved_at:Date.now(),data:snap.val()});alert(`✅ ${weekLabel(weekKey)} 저장 완료!`)}
+  catch(err){alert('저장 실패: '+err.message)}
+});
+document.getElementById('btn-reset-week').addEventListener('click',async()=>{
+  if(!confirm(`[${selectedClass}] 이번 주 출석을 초기화할까요?`))return;
+  try{await db.ref(`attendance/${weekKey}/${sanitizeKey(selectedClass)}`).remove();alert('초기화 완료!')}
+  catch(err){alert('초기화 실패: '+err.message)}
 });
 
-// ═══════════════════════════════
-// 현재 수업 리셋
-// ═══════════════════════════════
-document.getElementById('btn-reset-week').addEventListener('click', async () => {
-  if (!confirm(`[${selectedClass}] 이번 주 출석을 초기화할까요?`)) return;
-  try {
-    await db.ref(`attendance/${weekKey}/${sanitizeKey(selectedClass)}`).remove();
-    alert('초기화 완료!');
-  } catch (err) {
-    alert('초기화 실패: ' + err.message);
-  }
+// ── 시간표 ──
+document.getElementById('btn-go-timetable').addEventListener('click',()=>{showScreen('screen-timetable');renderTimetable()});
+document.getElementById('btn-tt-back').addEventListener('click',()=>{showScreen('screen-home');renderClasses()});
+async function loadTimetable(){const snap=await db.ref('timetable').get();timetable=snap.exists()?Object.values(snap.val()):[]}
+function renderTimetable(){
+  const list=document.getElementById('tt-list');
+  if(!timetable.length){list.innerHTML='<div class="empty">시간표가 없습니다.</div>';return}
+  const dayOrder={월:0,화:1,수:2,목:3,금:4,토:5,일:6};
+  list.innerHTML=[...timetable].sort((a,b)=>(dayOrder[a.요일]??9)-(dayOrder[b.요일]??9)||a.시간.localeCompare(b.시간)).map(t=>{
+    const i=timetable.indexOf(t);
+    return`<div class="tt-card">
+      <div class="tt-card-header"><span class="tt-day-badge day-${t.요일||''}">${t.요일||'?'}요일</span><button class="btn-del" onclick="deleteTTRow(${i})">✕</button></div>
+      <div class="tt-fields">
+        <div class="tt-field"><label>요일</label><select onchange="updateTTRow(${i},'요일',this.value)">${['월','화','수','목','금','토','일'].map(d=>`<option${t.요일===d?' selected':''}>${d}</option>`).join('')}</select></div>
+        <div class="tt-field"><label>시간</label><input value="${t.시간||''}" placeholder="1~2교시" oninput="updateTTRow(${i},'시간',this.value)"></div>
+        <div class="tt-field"><label>과목</label><input value="${t.과목||''}" placeholder="문학" oninput="updateTTRow(${i},'과목',this.value)"></div>
+        <div class="tt-field"><label>그룹</label><input value="${t.그룹||''}" placeholder="S국어B" oninput="updateTTRow(${i},'그룹',this.value)"></div>
+        <div class="tt-field"><label>조합</label><input value="${t.조합||''}" placeholder="㉠" oninput="updateTTRow(${i},'조합',this.value)"></div>
+        <div class="tt-field"><label>선생님</label><input value="${t.선생님||''}" placeholder="홍길동" oninput="updateTTRow(${i},'선생님',this.value)"></div>
+        <div class="tt-field full"><label>강의실</label><input value="${t.강의실||''}" placeholder="203호" oninput="updateTTRow(${i},'강의실',this.value)"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function updateTTRow(i,key,val){if(timetable[i])timetable[i][key]=val}
+function deleteTTRow(i){if(!confirm('삭제할까요?'))return;timetable.splice(i,1);renderTimetable()}
+document.getElementById('btn-add-row').addEventListener('click',()=>{timetable.push({요일:'월',시간:'',과목:'',그룹:'',조합:'',선생님:'',강의실:''});renderTimetable();document.getElementById('tt-list').lastElementChild?.scrollIntoView({behavior:'smooth'})});
+document.getElementById('btn-save-tt').addEventListener('click',async()=>{
+  try{const data={};timetable.forEach((t,i)=>{data[`row_${i}`]=t});await db.ref('timetable').set(data);alert('✅ 시간표 저장 완료!');renderClasses()}
+  catch(err){alert('저장 실패: '+err.message)}
 });
+document.getElementById('file-input').addEventListener('change',e=>{
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'binary'});
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      const newRows=rows.map(r=>({요일:String(r['요일']||'').trim(),시간:String(r['시간']||'').trim(),과목:String(r['과목']||'').trim(),그룹:String(r['그룹']||'').trim(),조합:String(r['조합']||'').trim(),선생님:String(r['선생님']||'').trim(),강의실:String(r['강의실']||'').trim()})).filter(r=>r.그룹);
+      if(!newRows.length){alert('데이터를 찾을 수 없습니다.');return}
+      if(confirm(`${newRows.length}개 수업 불러옴.\n[확인] 추가  [취소] 교체`))timetable=[...timetable,...newRows];else timetable=newRows;
+      renderTimetable();
+    }catch(err){alert('파일 읽기 실패: '+err.message)}
+    e.target.value='';
+  };
+  reader.readAsBinaryString(file);
+});
+
+// ── 정기수업 설정 ──
+document.getElementById('btn-go-regular').addEventListener('click',()=>{showScreen('screen-regular');renderRegular()});
+document.getElementById('btn-reg-back').addEventListener('click',()=>{showScreen('screen-home');renderClasses()});
+async function loadRegularClasses(){const snap=await db.ref('regular_classes').get();regularClasses=snap.exists()?new Set(Object.keys(snap.val())):new Set()}
+function renderRegular(){
+  const list=document.getElementById('reg-list');
+  if(!allClasses.length){list.innerHTML='<div class="empty">학생 데이터를 먼저 불러와주세요.</div>';return}
+  list.innerHTML=allClasses.map(c=>{
+    const checked=regularClasses.has(c.그룹명);
+    const tt=timetable.find(t=>t.그룹===c.그룹명);
+    const timeSub=tt?`${tt.요일} ${tt.시간}`:c.subjects;
+    return`<div class="reg-item" onclick="toggleRegular('${c.그룹명.replace(/'/g,"\\'")}')">
+      <div class="reg-check${checked?' checked':''}"></div>
+      <div class="reg-info">
+        <div class="reg-name">${c.그룹명}</div>
+        <div class="reg-sub">${timeSub} · ${c.count}명</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleRegular(그룹명){
+  if(regularClasses.has(그룹명))regularClasses.delete(그룹명);else regularClasses.add(그룹명);
+  renderRegular();
+}
+document.getElementById('btn-reg-save').addEventListener('click',async()=>{
+  try{
+    const data={};regularClasses.forEach(g=>{data[sanitizeKey(g)]=true});
+    await db.ref('regular_classes').set(data);
+    alert('✅ 정기수업 저장 완료!');renderClasses();
+  }catch(err){alert('저장 실패: '+err.message)}
+});
+
+// ── 수동 명단 ──
+document.getElementById('btn-go-manual').addEventListener('click',()=>{showScreen('screen-manual');renderManualStudents()});
+document.getElementById('btn-manual-back').addEventListener('click',()=>showScreen('screen-home'));
+document.getElementById('btn-show-manual-input').addEventListener('click',()=>{
+  const row=document.getElementById('manual-input-row');
+  row.style.display=row.style.display==='none'?'flex':'none';
+});
+document.getElementById('btn-add-manual-student').addEventListener('click',addManualStudent);
+document.getElementById('manual-id-input').addEventListener('keydown',e=>{if(e.key==='Enter')addManualStudent()});
+
+function addManualStudent(){
+  const idVal=document.getElementById('manual-id-input').value.trim();
+  const seatVal=document.getElementById('manual-seat-input').value.trim();
+  if(!idVal)return;
+  if(manualStudents.find(s=>s.학번===idVal)){alert('이미 추가된 학번입니다.');return}
+  const baseInfo=allStudents[idVal]||{};
+  manualStudents.push({학번:idVal,성명:baseInfo.성명||'(미확인)',성별:baseInfo.성별||'',퀀텀자리:baseInfo.퀀텀자리||'',외박여부:baseInfo.외박여부||'',좌석:seatVal});
+  document.getElementById('manual-id-input').value='';document.getElementById('manual-seat-input').value='';
+  renderManualStudents();
+}
+
+document.getElementById('manual-file-input').addEventListener('change',e=>{
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'binary'});
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      let added=0;
+      rows.forEach(r=>{
+        const idVal=String(r['학번']||r['학번 '||'']||'').trim();
+        const seatVal=String(r['좌석번호']||r['좌석']||'').trim();
+        if(!idVal||manualStudents.find(s=>s.학번===idVal))return;
+        const baseInfo=allStudents[idVal]||{};
+        manualStudents.push({학번:idVal,성명:baseInfo.성명||'(미확인)',성별:baseInfo.성별||'',퀀텀자리:baseInfo.퀀텀자리||'',외박여부:baseInfo.외박여부||'',좌석:seatVal});
+        added++;
+      });
+      alert(`${added}명 추가됐습니다.`);renderManualStudents();
+    }catch(err){alert('파일 읽기 실패: '+err.message)}
+    e.target.value='';
+  };
+  reader.readAsBinaryString(file);
+});
+
+document.getElementById('mfilter-all').addEventListener('click',()=>setManualFilter('all'));
+document.getElementById('mfilter-unchecked').addEventListener('click',()=>setManualFilter('unchecked'));
+document.getElementById('mfilter-checked').addEventListener('click',()=>setManualFilter('checked'));
+function setManualFilter(mode){
+  manualFilter=mode;
+  document.querySelectorAll('#screen-manual .filter-chip').forEach(b=>b.classList.remove('active'));
+  document.getElementById('mfilter-'+mode).classList.add('active');
+  renderManualStudents();
+}
+
+function renderManualStudents(){
+  const list=document.getElementById('manual-student-list');
+  let students=[...manualStudents];
+  if(manualFilter==='unchecked')students=students.filter(s=>!(manualAttendance[s.학번]||{}).status);
+  else if(manualFilter==='checked')students=students.filter(s=>!!(manualAttendance[s.학번]||{}).status);
+  if(!students.length){list.innerHTML=`<div class="empty">${manualFilter==='unchecked'?'미출석 학생이 없습니다 ✅':'학번을 추가해주세요.'}</div>`;return}
+  list.innerHTML=students.map(s=>{
+    const status=(manualAttendance[s.학번]||{}).status||'';
+    return`<div class="student-card${status?' st-'+status:''}">
+      <div class="card-top">
+        <span class="student-name">${s.성명}</span>
+        <span class="student-id">${s.학번}</span>
+        ${s.좌석?`<span class="student-seat">좌석 ${s.좌석}</span>`:''}
+      </div>
+      <div class="badges">
+        ${s.성별?`<span class="badge b-성별">${s.성별}</span>`:''}
+        ${s.외박여부?`<span class="badge b-외박">외박 ${s.외박여부}</span>`:''}
+        ${s.퀀텀자리?`<span class="badge b-퀀텀">퀀텀 ${s.퀀텀자리}</span>`:''}
+      </div>
+      <div class="status-btns">
+        ${['출석','외박','취소','기타'].map(st=>`<button class="status-btn${status===st?' s-'+st:''}" onclick="setManualStatus('${s.학번}','${st}')">${st}</button>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setManualStatus(학번,status){
+  const current=(manualAttendance[학번]||{}).status;
+  if(current===status)delete manualAttendance[학번];else manualAttendance[학번]={status,updated_at:Date.now()};
+  renderManualStudents();
+}
 </script>
 </body>
 </html>
