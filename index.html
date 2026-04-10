@@ -9,7 +9,6 @@
 :root{--t:#2BADA0;--td:#0D6B64;--g:#D4BE52;--bg:#f4f6f8;--w:#fff;--tx:#1a1a1a;--mu:#6b7280;--br:#e5e7eb}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
 .screen{display:none;min-height:100vh;flex-direction:column}.screen.active{display:flex}
-/* 로그인 */
 #sl{justify-content:center;align-items:center;background:linear-gradient(160deg,var(--td),var(--t));padding:24px}
 .lb{background:var(--w);border-radius:20px;padding:40px 32px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
 .ll{text-align:center;margin-bottom:36px}.lt{font-size:22px;font-weight:800;color:var(--td)}.ls{font-size:13px;color:var(--mu);margin-top:4px}
@@ -19,20 +18,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .blo{width:100%;padding:14px;margin-top:4px;background:var(--t);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
 .blo:disabled{background:#9ca3af;cursor:not-allowed}
 .le{color:#dc2626;font-size:13px;margin-top:10px;text-align:center;min-height:18px}
-/* 헤더 */
 .hd{background:var(--t);color:#fff;padding:13px 18px;display:flex;align-items:center;gap:9px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .ht{flex:1;min-width:0}.hs{font-size:11px;opacity:.75}.hd h2{font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bi{background:none;border:none;color:#fff;cursor:pointer;font-size:18px;padding:4px 5px;border-radius:6px;line-height:1;transition:background .15s;white-space:nowrap}
 .bi:hover{background:rgba(255,255,255,.18)}
-/* 탭 */
 .tb{display:flex;background:var(--w);border-bottom:1px solid var(--br)}
 .tbn{flex:1;padding:10px 4px;border:none;background:none;font-size:13px;font-weight:600;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent}
 .tbn.active{color:var(--td);border-bottom-color:var(--t)}
-/* 검색 */
 .sw{background:var(--w);padding:10px 14px;border-bottom:1px solid var(--br)}
 .sw input{width:100%;padding:9px 15px;border:1.5px solid var(--br);border-radius:24px;font-size:15px;outline:none;background:var(--bg)}
 .sw input:focus{border-color:var(--t);background:var(--w)}
-/* 수업목록 */
 .cl{flex:1;overflow-y:auto}
 .sl2{padding:9px 16px 5px;font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;background:var(--bg)}
 .ci{background:var(--w);border-bottom:1px solid var(--br);padding:13px 18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .1s}
@@ -44,21 +39,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .wb{background:var(--td);color:#fff;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .ws{font-size:12px;opacity:.9;flex:1}
 .wa{display:flex;gap:7px}
-.bsv{padding:6px 13px;background:var(--g);color:#3b2800;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
-.brs{padding:6px 13px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
-/* 학번입력 */
+.bsv{padding:6px 13px;background:var(--g);color:#3b2800;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+.brs2{padding:6px 13px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+/* 학번 입력 + 인라인 좌석 */
 .ib{background:var(--w);padding:9px 14px;border-bottom:1px solid var(--br);display:flex;gap:8px;align-items:center}
-.ib input{flex:1;padding:9px 14px;border:1.5px solid var(--br);border-radius:10px;font-size:16px;outline:none}
-.ib input:focus{border-color:var(--t)}.ib span{font-size:12px;color:var(--mu);white-space:nowrap}
-/* 좌석팝업 */
-.po{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:998;opacity:0;transition:opacity .2s;pointer-events:none}
-.po.show{opacity:1;pointer-events:auto}
-.pp{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.85);background:var(--w);border-radius:20px;padding:28px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:999;opacity:0;transition:all .2s;pointer-events:none;min-width:210px}
-.pp.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
-.ppn{font-size:20px;font-weight:800;color:var(--td);margin-bottom:5px}
-.ppl{font-size:13px;color:var(--mu);margin-bottom:8px}
-.pps{font-size:60px;font-weight:900;color:var(--t);line-height:1}
-.ppb{font-size:12px;color:var(--mu);margin-top:7px}
+.ib input{flex:1;padding:9px 14px;border:1.5px solid var(--br);border-radius:10px;font-size:16px;outline:none;min-width:0}
+.ib input:focus{border-color:var(--t)}
+.si-box{background:#f0faf9;border:1.5px solid var(--t);border-radius:10px;padding:5px 12px;display:flex;flex-direction:column;align-items:center;min-width:72px;transition:opacity .3s}
+.si-box.hide{opacity:0;pointer-events:none}
+.si-nm{font-size:11px;color:var(--td);font-weight:700;white-space:nowrap}
+.si-se{font-size:24px;font-weight:900;color:var(--t);line-height:1.2}
 /* 필터 */
 .fb{background:var(--w);border-bottom:1px solid var(--br);padding:7px 12px;display:flex;gap:7px;overflow-x:auto}
 .fc{padding:5px 13px;border:1.5px solid var(--br);border-radius:20px;font-size:12px;font-weight:600;background:var(--w);color:var(--mu);cursor:pointer;white-space:nowrap}
@@ -80,9 +70,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .stb{display:flex;gap:5px}
 .stbtn{flex:1;padding:8px 3px;border:1.5px solid var(--br);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;background:var(--w);color:var(--mu)}
 .sa{background:var(--t)!important;color:#fff!important;border-color:var(--t)!important}
-.sb{background:#6366f1!important;color:#fff!important;border-color:#6366f1!important}
+.sb2{background:#6366f1!important;color:#fff!important;border-color:#6366f1!important}
 .sc2{background:#9ca3af!important;color:#fff!important;border-color:#9ca3af!important}
 .sd{background:#f59e0b!important;color:#fff!important;border-color:#f59e0b!important}
+/* 기타 메모 */
+.memo-row{display:flex;gap:6px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--br)}
+.memo-row input{flex:1;padding:7px 11px;border:1.5px solid #f59e0b;border-radius:8px;font-size:13px;outline:none}
+.memo-row input:focus{border-color:#d97706}
+.memo-save{padding:7px 12px;background:#f59e0b;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.memo-saved{font-size:11px;color:var(--mu);margin-top:4px}
 /* 시간표 */
 .ttb{background:var(--w);padding:10px 14px;border-bottom:1px solid var(--br);display:flex;gap:7px;flex-wrap:wrap;align-items:center}
 .bup{padding:7px 14px;background:var(--t);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
@@ -113,13 +109,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .brsdl{padding:5px 10px;background:none;border:none;color:#dc2626;font-size:16px;cursor:pointer}
 .rsi-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .ri-badge{font-size:11px;padding:3px 9px;border-radius:20px;background:#f0fdf4;color:#166534;font-weight:600}
-/* 세션추가 화면 */
+/* 세션추가 */
 .asf{background:var(--w);padding:12px 14px;border-bottom:1px solid var(--br)}
 .asfields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .asfi{display:flex;flex-direction:column;gap:3px}
 .asfi label{font-size:11px;font-weight:700;color:var(--mu)}
 .asfi input,.asfi select{padding:8px 11px;border:1.5px solid var(--br);border-radius:8px;font-size:14px;outline:none;width:100%}
 .asfi input:focus,.asfi select:focus{border-color:var(--t)}.asfi.full{grid-column:1/-1}
+.auto-info{background:#f0faf9;border:1px solid var(--t);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--td);margin-bottom:10px;display:none}
 .asl{flex:1;overflow-y:auto}
 .asg{background:var(--w);border-bottom:1px solid var(--br)}
 .asgh{padding:11px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;background:#f9fafb}
@@ -148,7 +145,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .mir input{flex:1;padding:8px 12px;border:1.5px solid var(--br);border-radius:8px;font-size:14px;outline:none}
 .mir input:focus{border-color:var(--t)}
 .bmas{padding:8px 14px;background:var(--t);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
-/* 공통 */
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;color:var(--mu)}
 .sp{width:36px;height:36px;border:3px solid var(--br);border-top-color:var(--t);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -158,7 +154,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 </head>
 <body>
 
-<!-- 로그인 -->
 <div id="sl" class="screen active">
   <div class="lb">
     <div class="ll"><div class="lt">강남대성기숙 QUETTA</div><div class="ls">출석 관리 시스템</div></div>
@@ -168,7 +163,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   </div>
 </div>
 
-<!-- 홈 -->
 <div id="sh" class="screen">
   <div class="hd">
     <div class="ht"><div class="hs">강남대성기숙 QUETTA</div><h2>출석부</h2></div>
@@ -184,10 +178,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
     <button class="tbn" id="tab2">전체 수업</button>
   </div>
   <div class="sw"><input type="search" id="srch" placeholder="수업 검색..."></div>
-  <div class="cl" id="cl"><div class="loading"><div class="sp"></div><span>데이터 불러오는 중...</span></div></div>
+  <div class="cl" id="cl"><div class="loading"><div class="sp"></div><span>불러오는 중...</span></div></div>
 </div>
 
-<!-- 출석체크 -->
 <div id="sa" class="screen">
   <div class="hd">
     <button class="bi" id="bbk">←</button>
@@ -196,21 +189,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   </div>
   <div class="wb">
     <span class="ws" id="ast">집계 중...</span>
-    <div class="wa"><button class="bsv" id="bsw">주 마감</button><button class="brs" id="brw">리셋</button></div>
+    <div class="wa"><button class="bsv" id="bsw">주 마감</button><button class="brs2" id="brw">리셋</button></div>
   </div>
   <div class="ib">
     <input type="number" id="idi" placeholder="학번 입력 후 Enter" inputmode="numeric">
-    <span>→ 자동 출석</span>
+    <div class="si-box hide" id="sib">
+      <div class="si-nm" id="sinm"></div>
+      <div class="si-se" id="sise"></div>
+    </div>
   </div>
   <div class="fb">
     <button class="fc active" id="fa">전체</button>
-    <button class="fc" id="fu">미출석만</button>
-    <button class="fc" id="fc2">체크 완료</button>
+    <button class="fc" id="fu">미출석</button>
+    <button class="fc" id="fc2">출석 완료</button>
   </div>
   <div class="stl" id="stl"></div>
 </div>
 
-<!-- 시간표 -->
 <div id="stt" class="screen">
   <div class="hd">
     <button class="bi" id="bttbk">←</button>
@@ -222,45 +217,47 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
     <button class="bar" id="badd">+ 수업 추가</button>
     <button class="bst" id="bstt">💾 저장</button>
   </div>
-  <div class="ttl" id="ttl"><div class="empty">시간표가 없습니다.</div></div>
+  <div class="ttl" id="ttl"><div class="empty">시간표 없음</div></div>
 </div>
 
-<!-- 정기수업 목록 -->
 <div id="sreg" class="screen">
   <div class="hd">
     <button class="bi" id="bregbk">←</button>
-    <div class="ht"><div class="hs">오늘 탭에 표시할 수업 세션</div><h2>정기수업 관리</h2></div>
+    <div class="ht"><div class="hs">오늘 탭에 표시할 수업</div><h2>정기수업 관리</h2></div>
   </div>
   <div class="rsb">
-    <span style="font-size:13px;color:var(--mu);flex:1">세션별로 수업을 묶어 관리합니다</span>
-    <button class="bst" id="baddses">+ 새 세션 추가</button>
+    <span style="font-size:13px;color:var(--mu);flex:1">수업을 묶어 세션으로 관리합니다</span>
+    <button class="bst" id="baddses">+ 새 세션</button>
   </div>
-  <div class="rsl" id="rsl"><div class="empty">정기수업 세션이 없습니다.<br>+ 새 세션 추가를 눌러주세요.</div></div>
+  <div class="rsl" id="rsl"><div class="empty">세션이 없습니다.<br>+ 새 세션을 추가해주세요.</div></div>
 </div>
 
-<!-- 세션 추가/편집 -->
 <div id="sas" class="screen">
   <div class="hd">
     <button class="bi" id="basbk">←</button>
-    <div class="ht"><div class="hs">출석체크 단위 설정</div><h2 id="asttl">새 세션 추가</h2></div>
+    <div class="ht"><div class="hs">출석체크 단위 설정</div><h2 id="asttl">새 세션</h2></div>
     <button class="bi" id="bassv" style="font-size:14px;font-weight:700">저장</button>
   </div>
   <div class="asf">
     <div class="asfields">
-      <div class="asfi full"><label>세션 이름</label><input id="asname" placeholder="예: AL 파일럿 미적분 (㉠)"></div>
-      <div class="asfi"><label>요일</label>
-        <select id="asday"><option value="">미지정</option><option>월</option><option>화</option><option>수</option><option>목</option><option>금</option><option>토</option><option>일</option></select>
-      </div>
-      <div class="asfi"><label>시간</label><input id="astime" placeholder="예: 3~4교시"></div>
-      <div class="asfi"><label>강의실</label><input id="asroom" placeholder="예: 202호"></div>
-      <div class="asfi"><label>선생님</label><input id="asteacher" placeholder="예: 홍길동"></div>
+      <div class="asfi full"><label>세션 이름</label><input id="asname" placeholder="수업 1개 선택 시 자동 입력"></div>
     </div>
-    <div style="font-size:12px;color:var(--mu)">아래에서 이 세션에 포함할 수업을 선택하세요 (여러 개 선택 시 통합 출석체크)</div>
+    <div class="auto-info" id="auto-info"></div>
+    <div id="manual-schedule">
+      <div class="asfields">
+        <div class="asfi"><label>요일</label>
+          <select id="asday"><option value="">미지정</option><option>월</option><option>화</option><option>수</option><option>목</option><option>금</option><option>토</option><option>일</option></select>
+        </div>
+        <div class="asfi"><label>시간</label><input id="astime" placeholder="예: 3~4교시"></div>
+        <div class="asfi"><label>강의실</label><input id="asroom" placeholder="예: 202호"></div>
+        <div class="asfi"><label>선생님</label><input id="asteacher" placeholder="예: 홍길동"></div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--mu);margin-top:4px">아래에서 포함할 수업을 선택하세요</div>
   </div>
   <div class="asl" id="asl"><div class="loading"><div class="sp"></div><span>불러오는 중...</span></div></div>
 </div>
 
-<!-- 수동명단 -->
 <div id="sma" class="screen">
   <div class="hd">
     <button class="bi" id="bmabk">←</button>
@@ -269,15 +266,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   <div class="mh">
     <div class="mff">
       <div class="mf full"><label>제목</label><input id="mttl" placeholder="예: 3월 전체 모의고사"></div>
-      <div class="mf"><label>시간</label><input id="mtime" placeholder="예: 09:00~12:00"></div>
-      <div class="mf"><label>강의실</label><input id="mroom" placeholder="예: 203호"></div>
-      <div class="mf full"><label>선생님</label><input id="mteacher" placeholder="예: 홍길동"></div>
+      <div class="mf"><label>시간</label><input id="mtime" placeholder="09:00~12:00"></div>
+      <div class="mf"><label>강의실</label><input id="mroom" placeholder="203호"></div>
+      <div class="mf full"><label>선생님</label><input id="mteacher" placeholder="홍길동"></div>
     </div>
     <div class="mur">
-      <button class="bmu" onclick="document.getElementById('fi3').click()">📂 학번 엑셀 업로드</button>
+      <button class="bmu" onclick="document.getElementById('fi3').click()">📂 학번 업로드</button>
       <input type="file" id="fi3" accept=".xlsx,.xls">
-      <button class="bma" id="bsmi">+ 학번 직접 추가</button>
-      <button class="bmu" id="bclrm" style="background:#dc2626">전체 초기화</button>
+      <button class="bma" id="bsmi">+ 직접 추가</button>
+      <button class="bmu" id="bclrm" style="background:#dc2626">초기화</button>
     </div>
   </div>
   <div class="mir" id="mir" style="display:none">
@@ -287,19 +284,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   </div>
   <div class="fb">
     <button class="fc active" id="mfa">전체</button>
-    <button class="fc" id="mfu">미출석만</button>
-    <button class="fc" id="mfc">체크 완료</button>
+    <button class="fc" id="mfu">미출석</button>
+    <button class="fc" id="mfc">출석 완료</button>
   </div>
-  <div class="stl" id="msl"><div class="empty">학번을 추가해주세요.<br>엑셀 헤더: 학번 / 좌석번호</div></div>
-</div>
-
-<!-- 팝업 -->
-<div class="po" id="po" onclick="csp()"></div>
-<div class="pp" id="pp">
-  <div class="ppn" id="ppn"></div>
-  <div class="ppl">수업 좌석번호</div>
-  <div class="pps" id="pps"></div>
-  <div class="ppb" id="ppb"></div>
+  <div class="stl" id="msl"><div class="empty">학번 추가 후 시작하세요.<br>엑셀 헤더: 학번 / 좌석번호</div></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -315,13 +303,13 @@ firebase.initializeApp(FC);
 const auth=firebase.auth(),db=firebase.database();
 
 let allStu={},allCls=[],tt=[],sessions=[],curSes=null,attRef=null,attData={},fMode='all',tabM='today';
-let mStu=[],mAtt={},mFil='all',editSesId=null,selItems=new Set();
+let selItems=new Set(),editSesId=null;
 let manualStudents=[],manualAttendance={},manualFilter='all';
 const wk=getWK();
 
 function getWK(){const d=new Date(),dy=d.getDay()||7;d.setDate(d.getDate()+4-dy);const y=d.getFullYear(),s=new Date(y,0,1),w=Math.ceil((((d-s)/86400000)+1)/7);return`${y}-W${String(w).padStart(2,'0')}`}
 function wkLbl(k){const[y,w]=k.split('-W');return`${y}년 ${parseInt(w)}주차`}
-function sk(s){return s.replace(/[.#$[\]/\s]/g,'_')}
+function sk(s){return String(s).replace(/[.#$[\]/\s]/g,'_')}
 function today(){return DAYS[new Date().getDay()]}
 function ss(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
@@ -331,7 +319,8 @@ BLO.addEventListener('click',login);PWI.addEventListener('keydown',e=>{if(e.key=
 async function login(){
   const pw=PWI.value.trim();if(!pw){LE.textContent='비밀번호 입력';return}
   BLO.disabled=true;BLO.textContent='로그인 중...';LE.textContent='';
-  try{await auth.signInWithEmailAndPassword(EM,pw)}catch{LE.textContent='비밀번호 오류';BLO.disabled=false;BLO.textContent='로그인'}
+  try{await auth.signInWithEmailAndPassword(EM,pw)}
+  catch{LE.textContent='비밀번호 오류';BLO.disabled=false;BLO.textContent='로그인'}
 }
 document.getElementById('blo2').addEventListener('click',()=>{if(confirm('로그아웃?'))auth.signOut()});
 auth.onAuthStateChanged(u=>{
@@ -339,7 +328,7 @@ auth.onAuthStateChanged(u=>{
   else{ss('sl');BLO.disabled=false;BLO.textContent='로그인';PWI.value=''}
 });
 
-// 학생데이터
+// 학생 데이터
 document.getElementById('bref').addEventListener('click',loadStu);
 async function loadStu(){
   const l=document.getElementById('cl');
@@ -369,33 +358,35 @@ document.getElementById('tab2').addEventListener('click',()=>{tabM='all';documen
 document.getElementById('srch').addEventListener('input',e=>renderCls(e.target.value.trim()));
 
 function getTodaySes(){return sessions.filter(s=>s.요일===today())}
-function sesKey(s){return`ses_${s.id}`}
+function getSesStudentCount(ses){
+  const keys=new Set((ses.items||[]).map(it=>`${it.그룹명}|||${it.조합}`));
+  let cnt=0;for(const id in allStu){if((allStu[id].수업목록||[]).some(u=>keys.has(`${u.그룹명}|||${u.조합}`)))cnt++;}
+  return cnt;
+}
 
 function renderCls(q=''){
   const l=document.getElementById('cl');
-  if(!allCls.length)return;
+  if(!allCls.length&&!q)return;
   const td=today();
+  const allSesSk=new Set(sessions.flatMap(s=>(s.items||[]).map(it=>`${it.그룹명}|||${it.조합}|||${it.과목명||''}`)));
+  const todaySesSk=new Set(getTodaySes().flatMap(s=>(s.items||[]).map(it=>`${it.그룹명}|||${it.조합}|||${it.과목명||''}`)));
 
   if(tabM==='today'&&!q){
-    const todaySes=getTodaySes();
-    if(!todaySes.length){l.innerHTML=`<div class="empty">오늘(${td}) 정기수업이 없습니다.<br>★ 버튼에서 세션을 추가해주세요.</div>`;return}
-    window._tds=todaySes;
-    l.innerHTML=`<div class="sl2">오늘 ${td}요일 정기수업 ${todaySes.length}개</div>`+
-      todaySes.map((s,i)=>{
+    const tds=getTodaySes();
+    if(!tds.length){l.innerHTML=`<div class="empty">오늘(${td}) 정기수업 없음<br>★ 버튼에서 세션을 추가하세요.</div>`;return}
+    window._tds=tds;
+    l.innerHTML=`<div class="sl2">오늘 ${td}요일 ${tds.length}개 세션</div>`+
+      tds.map((s,i)=>{
         const cnt=getSesStudentCount(s);
         return`<div class="ci tc" onclick="openSes(${i})">
           <div><div class="cn">${s.name}</div>
           <div class="cs">${s.시간||''}${s.강의실?' · '+s.강의실:''}${s.선생님?' · '+s.선생님:''}</div>
-          <div class="ct">${s.items.length}개 수업 묶음</div></div>
+          <div class="ct">${(s.items||[]).length}개 수업 포함</div></div>
           <span class="cc today">${cnt}명</span>
         </div>`;
       }).join('');
     return;
   }
-
-  // 전체탭
-  const allSesSk=new Set(sessions.flatMap(s=>s.items.map(it=>`${it.그룹명}|||${it.조합}|||${it.과목명||''}`)));
-  const todaySesSk=new Set(getTodaySes().flatMap(s=>s.items.map(it=>`${it.그룹명}|||${it.조합}|||${it.과목명||''}`)));
 
   let filtered=q?allCls.filter(c=>c.그룹명.toLowerCase().includes(q.toLowerCase())||c.과목명.toLowerCase().includes(q.toLowerCase())||c.조합.includes(q)):allCls;
   if(!filtered.length){l.innerHTML='<div class="empty">검색 결과 없음</div>';return}
@@ -408,7 +399,7 @@ function renderCls(q=''){
     window._fc=[...todayL,...regL,...othL];
     if(todayL.length){html+=`<div class="sl2">오늘(${td}) 정기수업</div>`;html+=todayL.map((c,i)=>ciHTML(c,i,true)).join('')}
     if(regL.length){html+=`<div class="sl2">정기수업</div>`;html+=regL.map((c,i)=>ciHTML(c,todayL.length+i,false)).join('')}
-    if(othL.length){html+=`<div class="sl2">전체 수업 (${othL.length})</div>`;html+=othL.map((c,i)=>ciHTML(c,todayL.length+regL.length+i,false)).join('')}
+    if(othL.length){html+=`<div class="sl2">전체 (${othL.length})</div>`;html+=othL.map((c,i)=>ciHTML(c,todayL.length+regL.length+i,false)).join('')}
   }else{
     window._fc=filtered;
     html=filtered.map((c,i)=>ciHTML(c,i,todaySesSk.has(`${c.그룹명}|||${c.조합}|||${c.과목명||''}`))).join('');
@@ -417,9 +408,9 @@ function renderCls(q=''){
 }
 
 function ciHTML(c,i,isT){
-  const ses=sessions.find(s=>s.items.some(it=>it.그룹명===c.그룹명&&it.조합===c.조합));
+  const ses=sessions.find(s=>(s.items||[]).some(it=>it.그룹명===c.그룹명&&it.조합===c.조합));
   const tt2=tt.find(t=>t.그룹===c.그룹명);
-  const sub=ses?`${ses.요일||''} ${ses.시간||''} ${ses.강의실?'· '+ses.강의실:''}`.trim():(tt2?`${tt2.요일} ${tt2.시간}`.trim():'');
+  const sub=ses?`${ses.요일||''} ${ses.시간||''} ${ses.강의실?'· '+ses.강의실:''}`.trim():(tt2?`${tt2.요일||''} ${tt2.시간||''}`.trim():'');
   return`<div class="ci${isT?' tc':''}" onclick="openCls(${i})">
     <div><div class="cn">${c.과목명||c.그룹명} <span style="font-size:11px;font-weight:400;color:var(--mu)">${c.조합}</span></div>
     <div class="cs">${c.그룹명}${sub?' · '+sub:''}</div></div>
@@ -427,25 +418,15 @@ function ciHTML(c,i,isT){
   </div>`;
 }
 
-function getSesStudentCount(ses){
-  const keys=new Set(ses.items.map(it=>`${it.그룹명}|||${it.조합}`));
-  let cnt=0;
-  for(const id in allStu){if((allStu[id].수업목록||[]).some(u=>keys.has(`${u.그룹명}|||${u.조합}`)))cnt++;}
-  return cnt;
-}
-
-// 수업 열기 (단일 클래스 → 임시 세션 생성)
 function openCls(i){
   const c=window._fc[i];if(!c)return;
-  // 이미 세션이 있으면 그 세션으로
-  const ses=sessions.find(s=>s.items.some(it=>it.그룹명===c.그룹명&&it.조합===c.조합));
+  const ses=sessions.find(s=>(s.items||[]).some(it=>it.그룹명===c.그룹명&&it.조합===c.조합));
   if(ses){openSession(ses);return}
-  // 없으면 임시 세션
-  const tmpSes={id:'tmp_'+Date.now(),name:`${c.과목명||c.그룹명} ${c.조합}`,items:[{그룹명:c.그룹명,조합:c.조합,과목명:c.과목명}],요일:'',시간:'',강의실:'',선생님:'',_tmp:true};
-  openSession(tmpSes);
+  const tt2=tt.find(t=>t.그룹===c.그룹명);
+  const tmp={id:'tmp_'+c.그룹명+'_'+c.조합,name:`${c.과목명||c.그룹명} ${c.조합}`,요일:tt2?.요일||'',시간:tt2?.시간||'',강의실:tt2?.강의실||'',선생님:tt2?.선생님||'',items:[{그룹명:c.그룹명,조합:c.조합,과목명:c.과목명}],_tmp:true};
+  openSession(tmp);
 }
 function openSes(i){openSession(window._tds[i])}
-
 function openSession(ses){
   curSes=ses;fMode='all';
   document.querySelectorAll('#sa .fc').forEach(b=>b.classList.remove('active'));
@@ -454,38 +435,48 @@ function openSession(ses){
   document.getElementById('asub').textContent=`${ses.요일||''} ${ses.시간||''}${ses.강의실?' · '+ses.강의실:''}${ses.선생님?' · '+ses.선생님:''}`.trim();
   document.getElementById('awk').textContent=wkLbl(wk);
   document.getElementById('idi').value='';
+  hideSiBox();
   ss('sa');listenAtt();
 }
-
 document.getElementById('bbk').addEventListener('click',()=>{if(attRef){attRef.off();attRef=null}ss('sh')});
 
-// 학번입력
+// 인라인 좌석 표시
+function showSiBox(name,seat){
+  const b=document.getElementById('sib'),nm=document.getElementById('sinm'),se=document.getElementById('sise');
+  nm.textContent=name;se.textContent=seat||'-';
+  b.classList.remove('hide');
+  clearTimeout(window._sit);
+  window._sit=setTimeout(hideSiBox,2500);
+}
+function hideSiBox(){document.getElementById('sib').classList.add('hide')}
+
+// 학번 입력
 document.getElementById('idi').addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
   const v=e.target.value.trim();if(!v)return;
   const stu=allStu[v];
-  if(!stu){alert('학생 없음');e.target.select();return}
+  if(!stu){showSiBox('없음','?');e.target.select();return}
   const keys=new Set((curSes.items||[]).map(it=>`${it.그룹명}|||${it.조합}`));
   const match=(stu.수업목록||[]).find(u=>keys.has(`${u.그룹명}|||${u.조합}`));
-  if(!match){alert(`${stu.성명}은 이 수업 수강생이 아닙니다.`);e.target.select();return}
-  db.ref(`attendance/${wk}/${sk(curSes.id)}/${v}`).set({status:'출석',updated_at:Date.now()});
-  showPop(stu,match);e.target.value='';
+  if(!match){showSiBox(stu.성명,'미수강');e.target.select();return}
+  const now=Date.now();
+  db.ref(`attendance/${wk}/${sk(curSes.id)}/${v}`).set({status:'출석',checked_at:now,updated_at:now});
+  showSiBox(stu.성명,match.좌석);
+  e.target.value='';
 });
 
-function showPop(stu,수업){
-  document.getElementById('ppn').textContent=stu.성명;
-  document.getElementById('pps').textContent=수업.좌석||'-';
-  document.getElementById('ppb').textContent=`${stu.반||''} ${stu.성별||''} · 퀀텀 ${stu.퀀텀자리||'-'}`;
-  document.getElementById('pp').classList.add('show');document.getElementById('po').classList.add('show');
-  clearTimeout(window._pt);window._pt=setTimeout(csp,3000);
-}
-function csp(){document.getElementById('pp').classList.remove('show');document.getElementById('po').classList.remove('show')}
-
 // 필터
+// 미출석 = 아무것도 체크 안 됨 + 외박/취소/기타 (출석만 제외)
+// 출석완료 = 출석만
 document.getElementById('fa').addEventListener('click',()=>setF('all'));
 document.getElementById('fu').addEventListener('click',()=>setF('unchecked'));
 document.getElementById('fc2').addEventListener('click',()=>setF('checked'));
-function setF(m){fMode=m;document.querySelectorAll('#sa .fc').forEach(b=>b.classList.remove('active'));document.getElementById(m==='all'?'fa':m==='unchecked'?'fu':'fc2').classList.add('active');renderStu()}
+function setF(m){
+  fMode=m;
+  document.querySelectorAll('#sa .fc').forEach(b=>b.classList.remove('active'));
+  document.getElementById(m==='all'?'fa':m==='unchecked'?'fu':'fc2').classList.add('active');
+  renderStu();
+}
 
 function listenAtt(){
   document.getElementById('stl').innerHTML='<div class="loading"><div class="sp"></div><span>불러오는 중...</span></div>';
@@ -502,21 +493,47 @@ function getSessionStudents(){
     const match=(s.수업목록||[]).find(u=>keys.has(`${u.그룹명}|||${u.조합}`));
     if(match)res.push({...s,해당수업:match});
   }
-  return res.sort((a,b)=>a.반!==b.반?a.반.localeCompare(b.반,'ko'):a.성명.localeCompare(b.성명,'ko'));
+  return res;
 }
 
 function renderStu(){
   const l=document.getElementById('stl');
   let stus=getSessionStudents();
-  if(fMode==='unchecked')stus=stus.filter(s=>!(attData[s.학번]||{}).status);
-  else if(fMode==='checked')stus=stus.filter(s=>!!(attData[s.학번]||{}).status);
-  if(!stus.length){l.innerHTML=`<div class="empty">${fMode==='unchecked'?'미출석 없음 ✅':'학생 없음'}</div>`;return}
+
+  if(fMode==='unchecked'){
+    // 출석 제외 모두 (외박/취소/기타 포함)
+    stus=stus.filter(s=>(attData[s.학번]||{}).status!=='출석');
+    // 아무것도 체크 안 된 학생 먼저
+    stus.sort((a,b)=>{
+      const stA=(attData[a.학번]||{}).status;
+      const stB=(attData[b.학번]||{}).status;
+      const wA=stA?1:0,wB=stB?1:0;
+      if(wA!==wB)return wA-wB;
+      return (a.반||'').localeCompare(b.반||'','ko')||(a.성명||'').localeCompare(b.성명||'','ko');
+    });
+  }else if(fMode==='checked'){
+    stus=stus.filter(s=>(attData[s.학번]||{}).status==='출석');
+    stus.sort((a,b)=>(a.반||'').localeCompare(b.반||'','ko')||(a.성명||'').localeCompare(b.성명||'','ko'));
+  }else{
+    stus.sort((a,b)=>(a.반||'').localeCompare(b.반||'','ko')||(a.성명||'').localeCompare(b.성명||'','ko'));
+  }
+
+  if(!stus.length){l.innerHTML=`<div class="empty">${fMode==='unchecked'?'미출석 없음 ✅':fMode==='checked'?'출석 체크 없음':'학생 없음'}</div>`;return}
+
   l.innerHTML=stus.map(s=>{
-    const st=(attData[s.학번]||{}).status||'';
+    const ad=attData[s.학번]||{};
+    const st=ad.status||'';
+    const memo=ad.memo||'';
     const{좌석,조합}=s.해당수업;
     const sc={출석:'s1',외박:'s2',취소:'s3',기타:'s4'}[st]||'';
-    return`<div class="sc ${sc}">
-      <div class="ct2"><span class="sn">${s.성명}</span><span class="sid">${s.학번}</span>${좌석?`<span class="sse">좌석 ${좌석}</span>`:''}</div>
+    const checkedAt=ad.checked_at?new Date(ad.checked_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'';
+    return`<div class="sc ${sc}" id="card-${s.학번}">
+      <div class="ct2">
+        <span class="sn">${s.성명}</span>
+        <span class="sid">${s.학번}</span>
+        ${좌석?`<span class="sse">좌석 ${좌석}</span>`:''}
+        ${checkedAt?`<span style="font-size:10px;color:var(--mu);margin-left:4px">${checkedAt}</span>`:''}
+      </div>
       <div class="bgs">
         ${s.반?`<span class="bg bb">${s.반}</span>`:''}
         ${s.성별?`<span class="bg bg2">${s.성별}</span>`:''}
@@ -524,7 +541,13 @@ function renderStu(){
         ${s.외박여부?`<span class="bg bw">외박 ${s.외박여부}</span>`:''}
         ${s.퀀텀자리?`<span class="bg bq">퀀텀 ${s.퀀텀자리}</span>`:''}
       </div>
-      <div class="stb">${['출석','외박','취소','기타'].map((x,xi)=>`<button class="stbtn${st===x?' '+'sa sb sc2 sd'.split(' ')[xi]:''}" onclick="setSt('${s.학번}','${x}')">${x}</button>`).join('')}</div>
+      <div class="stb">
+        ${['출석','외박','취소','기타'].map((x,xi)=>`<button class="stbtn${st===x?' '+'sa sb2 sc2 sd'.split(' ')[xi]:''}" onclick="setSt('${s.학번}','${x}')">${x}</button>`).join('')}
+      </div>
+      ${st==='기타'?`<div class="memo-row">
+        <input type="text" id="memo-${s.학번}" value="${memo.replace(/"/g,'&quot;')}" placeholder="기타 사유 입력...">
+        <button class="memo-save" onclick="saveMemo('${s.학번}')">저장</button>
+      </div>${memo?`<div class="memo-saved">저장된 사유: ${memo}</div>`:''}`:``}
     </div>`;
   }).join('');
 }
@@ -532,7 +555,21 @@ function renderStu(){
 function setSt(id,st){
   const path=`attendance/${wk}/${sk(curSes.id)}/${id}`;
   const cur=(attData[id]||{}).status;
-  if(cur===st)db.ref(path).remove();else db.ref(path).set({status:st,updated_at:Date.now()});
+  const now=Date.now();
+  if(cur===st){db.ref(path).remove();}
+  else{
+    const d={status:st,updated_at:now};
+    if(!(attData[id]||{}).checked_at)d.checked_at=now;
+    else d.checked_at=(attData[id]||{}).checked_at;
+    db.ref(path).set(d);
+  }
+}
+
+function saveMemo(id){
+  const inp=document.getElementById('memo-'+id);
+  if(!inp)return;
+  const memo=inp.value.trim();
+  db.ref(`attendance/${wk}/${sk(curSes.id)}/${id}`).update({memo,updated_at:Date.now()});
 }
 
 function updStats(){
@@ -561,7 +598,7 @@ function renderTT(){
   const l=document.getElementById('ttl');
   if(!tt.length){l.innerHTML='<div class="empty">시간표 없음</div>';return}
   const do2={월:0,화:1,수:2,목:3,금:4,토:5,일:6};
-  l.innerHTML=[...tt].sort((a,b)=>(do2[a.요일]??9)-(do2[b.요일]??9)||a.시간.localeCompare(b.시간)).map(t=>{
+  l.innerHTML=[...tt].sort((a,b)=>(do2[a.요일]??9)-(do2[b.요일]??9)||String(a.시간||'').localeCompare(String(b.시간||''))).map(t=>{
     const i=tt.indexOf(t);
     const dc={월:'dm',화:'dt',수:'dw',목:'dth',금:'df',토:'dsa',일:'dsu'}[t.요일]||'';
     return`<div class="ttc">
@@ -607,7 +644,7 @@ document.getElementById('bregbk').addEventListener('click',()=>ss('sh'));
 async function loadSes(){const snap=await db.ref('sessions').get();sessions=snap.exists()?Object.values(snap.val()):[]}
 function renderSes(){
   const l=document.getElementById('rsl');
-  if(!sessions.length){l.innerHTML='<div class="empty">정기수업 세션이 없습니다.<br>+ 새 세션 추가를 눌러주세요.</div>';return}
+  if(!sessions.length){l.innerHTML='<div class="empty">세션이 없습니다.<br>+ 새 세션을 추가해주세요.</div>';return}
   l.innerHTML=sessions.map((s,i)=>{
     const cnt=getSesStudentCount(s);
     return`<div class="rsc">
@@ -618,32 +655,40 @@ function renderSes(){
           <button class="brsdl" onclick="delSes(${i})">✕</button>
         </div>
       </div>
-      <div class="rsi-badges">${s.items.map(it=>`<span class="ri-badge">${it.과목명||it.그룹명} ${it.조합} (${it.그룹명})</span>`).join('')}</div>
+      <div class="rsi-badges">${(s.items||[]).map(it=>`<span class="ri-badge">${it.과목명||it.그룹명} ${it.조합} (${it.그룹명})</span>`).join('')}</div>
     </div>`;
   }).join('');
 }
+
 document.getElementById('baddses').addEventListener('click',()=>{
   editSesId=null;selItems=new Set();
   document.getElementById('asname').value='';document.getElementById('asday').value='';
   document.getElementById('astime').value='';document.getElementById('asroom').value='';document.getElementById('asteacher').value='';
-  document.getElementById('asttl').textContent='새 세션 추가';
+  document.getElementById('asttl').textContent='새 세션';
+  document.getElementById('auto-info').style.display='none';
+  document.getElementById('manual-schedule').style.display='block';
   ss('sas');renderAddSes();
 });
+
 function editSes(i){
   const s=sessions[i];editSesId=s.id;
-  selItems=new Set(s.items.map(it=>`${it.그룹명}|||${it.조합}|||${it.과목명||''}`));
+  selItems=new Set((s.items||[]).map(it=>`${it.그룹명}|||${it.조합}|||${it.과목명||''}`));
   document.getElementById('asname').value=s.name;document.getElementById('asday').value=s.요일||'';
   document.getElementById('astime').value=s.시간||'';document.getElementById('asroom').value=s.강의실||'';document.getElementById('asteacher').value=s.선생님||'';
   document.getElementById('asttl').textContent='세션 수정';
+  document.getElementById('auto-info').style.display='none';
+  document.getElementById('manual-schedule').style.display='block';
   ss('sas');renderAddSes();
 }
+
 async function delSes(i){
-  if(!confirm('이 세션을 삭제할까요?'))return;
+  if(!confirm('삭제?'))return;
   sessions.splice(i,1);
-  const d={};sessions.forEach((s,i)=>{d[s.id]=s});
-  await db.ref('sessions').set(d);
-  renderSes();
+  const d={};sessions.forEach(s=>{d[s.id]=s});
+  try{await db.ref('sessions').set(Object.keys(d).length?d:null);renderSes()}
+  catch(e){alert('삭제 실패: '+e.message)}
 }
+
 document.getElementById('basbk').addEventListener('click',()=>ss('sreg'));
 document.getElementById('bassv').addEventListener('click',saveSession);
 async function saveSession(){
@@ -655,28 +700,27 @@ async function saveSession(){
   if(editSesId){const idx=sessions.findIndex(s=>s.id===editSesId);if(idx>=0)sessions[idx]=sesObj;else sessions.push(sesObj);}
   else sessions.push(sesObj);
   const d={};sessions.forEach(s=>{d[s.id]=s});
-  try{await db.ref('sessions').set(d);alert('✅ 저장 완료!');ss('sreg');renderSes();}
+  try{await db.ref('sessions').set(d);alert('✅ 저장!');ss('sreg');renderSes();}
   catch(e){alert('저장 실패: '+e.message)}
 }
 
 function renderAddSes(){
   const l=document.getElementById('asl');
-  if(!allCls.length){l.innerHTML='<div class="empty">학생 데이터 없음. 홈에서 새로고침 후 다시 시도해주세요.</div>';return}
-  // 그룹명별로 묶기
+  if(!allCls.length){l.innerHTML='<div class="empty">홈에서 학생 데이터를 먼저 불러와주세요.</div>';return}
   const gmap={};
   allCls.forEach(c=>{if(!gmap[c.그룹명])gmap[c.그룹명]=[];gmap[c.그룹명].push(c)});
   l.innerHTML=Object.entries(gmap).sort((a,b)=>a[0].localeCompare(b[0],'ko')).map(([g,items])=>{
     const selCnt=items.filter(c=>selItems.has(`${c.그룹명}|||${c.조합}|||${c.과목명||''}`)).length;
     return`<div class="asg">
-      <div class="asgh" onclick="toggleGrp('${g.replace(/'/g,"\\'")}')">
-        <div><div class="asgn">${g}</div><div class="asgs">${items.length}개 수업</div></div>
+      <div class="asgh" onclick="toggleGrp('${sk(g)}')">
+        <div><div class="asgn">${g}</div><div class="asgs">${items.length}개</div></div>
         <span class="asgc">${selCnt?selCnt+'개 선택':''}</span>
       </div>
       <div class="asi-list" id="grp-${sk(g)}" style="display:none">
         ${items.map(c=>{
           const k=`${c.그룹명}|||${c.조합}|||${c.과목명||''}`;
           const on=selItems.has(k);
-          return`<div class="asi" onclick="toggleItem('${k.replace(/'/g,"\\'")}')">
+          return`<div class="asi" onclick="toggleItem('${k.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
             <div class="ach${on?' on':''}"></div>
             <div class="ain"><div class="ain-name">${c.과목명||'(과목없음)'} <span style="color:var(--mu)">${c.조합}</span></div></div>
             <span class="ain-cnt">${c.cnt}명</span>
@@ -686,14 +730,47 @@ function renderAddSes(){
     </div>`;
   }).join('');
 }
-function toggleGrp(g){const el=document.getElementById(`grp-${sk(g)}`);if(el)el.style.display=el.style.display==='none'?'block':'none'}
+
+function toggleGrp(gsk){const el=document.getElementById('grp-'+gsk);if(el)el.style.display=el.style.display==='none'?'block':'none'}
+
 function toggleItem(k){
   if(selItems.has(k))selItems.delete(k);else selItems.add(k);
+  updateScheduleSection();
   renderAddSes();
-  // 이름 자동 제안
-  if(selItems.size===1&&!document.getElementById('asname').value){
-    const[g,j,nm]=k.split('|||');
-    document.getElementById('asname').value=`${nm||g} ${j}`;
+}
+
+function updateScheduleSection(){
+  const autoInfo=document.getElementById('auto-info');
+  const manSched=document.getElementById('manual-schedule');
+  if(selItems.size===1){
+    const[그룹명,조합,과목명]=[...selItems][0].split('|||');
+    const tt2=tt.find(t=>t.그룹===그룹명);
+    // 자동 채우기
+    if(!editSesId){
+      document.getElementById('asname').value=`${과목명||그룹명} ${조합}`;
+    }
+    if(tt2){
+      document.getElementById('asday').value=tt2.요일||'';
+      document.getElementById('astime').value=tt2.시간||'';
+      document.getElementById('asroom').value=tt2.강의실||'';
+      document.getElementById('asteacher').value=tt2.선생님||'';
+      autoInfo.textContent=`📅 시간표에서 자동으로 불러왔습니다: ${tt2.요일||''} ${tt2.시간||''}${tt2.강의실?' · '+tt2.강의실:''}${tt2.선생님?' · '+tt2.선생님:''}`;
+      autoInfo.style.display='block';
+      manSched.style.display='none';
+    }else{
+      autoInfo.style.display='none';
+      manSched.style.display='block';
+    }
+  }else if(selItems.size>1){
+    autoInfo.style.display='none';
+    manSched.style.display='block';
+    if(!editSesId&&!document.getElementById('asname').value){
+      // 여러 개 선택 시 이름 초기화
+      document.getElementById('asname').value='';
+    }
+  }else{
+    autoInfo.style.display='none';
+    manSched.style.display='block';
   }
 }
 
@@ -740,24 +817,41 @@ function setMF(m){manualFilter=m;document.querySelectorAll('#sma .fc').forEach(b
 function renderMan(){
   const l=document.getElementById('msl');
   let sts=[...manualStudents];
-  if(manualFilter==='unchecked')sts=sts.filter(s=>!(manualAttendance[s.학번]||{}).status);
-  else if(manualFilter==='checked')sts=sts.filter(s=>!!(manualAttendance[s.학번]||{}).status);
+  if(manualFilter==='unchecked'){
+    sts=sts.filter(s=>(manualAttendance[s.학번]||{}).status!=='출석');
+    sts.sort((a,b)=>{const sA=(manualAttendance[a.학번]||{}).status,sB=(manualAttendance[b.학번]||{}).status;return (sA?1:0)-(sB?1:0)});
+  }else if(manualFilter==='checked'){
+    sts=sts.filter(s=>(manualAttendance[s.학번]||{}).status==='출석');
+  }
   if(!sts.length){l.innerHTML=`<div class="empty">${manualFilter==='unchecked'?'미출석 없음 ✅':'학번을 추가해주세요.'}</div>`;return}
   l.innerHTML=sts.map(s=>{
-    const st=(manualAttendance[s.학번]||{}).status||'';
+    const ad=manualAttendance[s.학번]||{};const st=ad.status||'';const memo=ad.memo||'';
     const sc={출석:'s1',외박:'s2',취소:'s3',기타:'s4'}[st]||'';
+    const checkedAt=ad.checked_at?new Date(ad.checked_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'';
     return`<div class="sc ${sc}">
-      <div class="ct2"><span class="sn">${s.성명}</span><span class="sid">${s.학번}</span>${s.좌석?`<span class="sse">좌석 ${s.좌석}</span>`:''}</div>
+      <div class="ct2"><span class="sn">${s.성명}</span><span class="sid">${s.학번}</span>${s.좌석?`<span class="sse">좌석 ${s.좌석}</span>`:''}${checkedAt?`<span style="font-size:10px;color:var(--mu);margin-left:4px">${checkedAt}</span>`:''}</div>
       <div class="bgs">
         ${s.성별?`<span class="bg bg2">${s.성별}</span>`:''}
         ${s.외박여부?`<span class="bg bw">외박 ${s.외박여부}</span>`:''}
         ${s.퀀텀자리?`<span class="bg bq">퀀텀 ${s.퀀텀자리}</span>`:''}
       </div>
-      <div class="stb">${['출석','외박','취소','기타'].map((x,xi)=>`<button class="stbtn${st===x?' '+'sa sb sc2 sd'.split(' ')[xi]:''}" onclick="setMSt('${s.학번}','${x}')">${x}</button>`).join('')}</div>
+      <div class="stb">${['출석','외박','취소','기타'].map((x,xi)=>`<button class="stbtn${st===x?' '+'sa sb2 sc2 sd'.split(' ')[xi]:''}" onclick="setMSt('${s.학번}','${x}')">${x}</button>`).join('')}</div>
+      ${st==='기타'?`<div class="memo-row"><input type="text" id="mmemo-${s.학번}" value="${memo.replace(/"/g,'&quot;')}" placeholder="기타 사유 입력..."><button class="memo-save" onclick="saveMMemo('${s.학번}')">저장</button></div>${memo?`<div class="memo-saved">저장: ${memo}</div>`:''}`:``}
     </div>`;
   }).join('');
 }
-function setMSt(id,st){const cur=(manualAttendance[id]||{}).status;if(cur===st)delete manualAttendance[id];else manualAttendance[id]={status:st};renderMan()}
+function setMSt(id,st){
+  const cur=(manualAttendance[id]||{}).status;
+  const now=Date.now();
+  if(cur===st){delete manualAttendance[id];}
+  else{manualAttendance[id]={status:st,checked_at:(manualAttendance[id]||{}).checked_at||now,updated_at:now};}
+  renderMan();
+}
+function saveMMemo(id){
+  const inp=document.getElementById('mmemo-'+id);if(!inp)return;
+  manualAttendance[id]={...manualAttendance[id],memo:inp.value.trim(),updated_at:Date.now()};
+  renderMan();
+}
 </script>
 </body>
 </html>
