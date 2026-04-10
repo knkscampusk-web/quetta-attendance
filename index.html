@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>QUETTA 출석부</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:      #2BADA0;
+      --teal-dark: #0D6B64;
+      --gold:      #D4BE52;
+      --bg:        #f4f6f8;
+      --white:     #ffffff;
+      --text:      #1a1a1a;
+      --muted:     #6b7280;
+      --border:    #e5e7eb;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── 화면 전환 ── */
+    .screen { display: none; min-height: 100vh; flex-direction: column; }
+    .screen.active { display: flex; }
+
+    /* ════════════════════════════
+       ① 로그인 화면
+    ════════════════════════════ */
+    #screen-login {
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(160deg, var(--teal-dark) 0%, var(--teal) 100%);
+      padding: 24px;
+    }
+
+    .login-box {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+    }
+
+    .login-logo { text-align: center; margin-bottom: 36px; }
+    .login-logo .logo-title {
+      font-size: 22px; font-weight: 800; color: var(--teal-dark);
+      letter-spacing: -0.5px;
+    }
+    .login-logo .logo-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; font-weight: 700;
+      color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .field input {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 16px; outline: none; transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--teal); }
+
+    .btn-login {
+      width: 100%; padding: 14px; margin-top: 4px;
+      background: var(--teal); color: white;
+      border: none; border-radius: 10px;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-login:hover { background: var(--teal-dark); }
+    .btn-login:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    .login-error { color: #dc2626; font-size: 13px; margin-top: 10px; text-align: center; min-height: 18px; }
+
+    /* ════════════════════════════
+       공통 헤더
+    ════════════════════════════ */
+    .header {
+      background: var(--teal); color: white;
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .header-titles { flex: 1; min-width: 0; }
+    .header-sub { font-size: 11px; opacity: 0.75; }
+    .header h2 { font-size: 18px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .btn-icon { background: none; border: none; color: white; cursor: pointer;
+      font-size: 20px; padding: 4px 6px; border-radius: 6px; line-height: 1;
+      transition: background .15s; }
+    .btn-icon:hover { background: rgba(255,255,255,0.15); }
+
+    /* ════════════════════════════
+       ② 수업 선택 화면
+    ════════════════════════════ */
+    .search-wrap {
+      background: white; padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .search-wrap input {
+      width: 100%; padding: 10px 16px;
+      border: 1.5px solid var(--border); border-radius: 24px;
+      font-size: 15px; outline: none; background: var(--bg);
+    }
+    .search-wrap input:focus { border-color: var(--teal); background: white; }
+
+    .class-list { flex: 1; overflow-y: auto; }
+
+    .class-item {
+      background: white; border-bottom: 1px solid var(--border);
+      padding: 16px 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background .1s;
+    }
+    .class-item:active { background: #f0faf9; }
+    .class-item-name { font-size: 16px; font-weight: 700; color: var(--teal-dark); }
+    .class-item-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .class-count {
+      background: var(--teal); color: white;
+      border-radius: 14px; padding: 3px 12px;
+      font-size: 12px; font-weight: 700; white-space: nowrap; margin-left: 12px;
+    }
+
+    /* ════════════════════════════
+       ③ 출석 체크 화면
+    ════════════════════════════ */
+    .week-bar {
+      background: var(--teal-dark); color: white;
+      padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; flex-wrap: wrap;
+    }
+    .week-stats { font-size: 12px; opacity: 0.9; flex: 1; }
+    .week-actions { display: flex; gap: 8px; }
+
+    .btn-save {
+      padding: 7px 14px; background: var(--gold);
+      color: #3b2800; border: none; border-radius: 8px;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-reset {
+      padding: 7px 14px; background: rgba(255,255,255,0.15);
+      color: white; border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .student-list { flex: 1; overflow-y: auto; padding: 10px 12px 24px; }
+
+    .student-card {
+      background: white; border-radius: 14px;
+      border: 2px solid var(--border);
+      padding: 14px 16px; margin-bottom: 10px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .student-card.st-출석 { border-color: var(--teal);     box-shadow: 0 2px 8px rgba(43,173,160,.15); }
+    .student-card.st-외박 { border-color: #6366f1;          box-shadow: 0 2px 8px rgba(99,102,241,.15); }
+    .student-card.st-취소 { border-color: #9ca3af;          box-shadow: none; }
+    .student-card.st-기타 { border-color: #f59e0b;          box-shadow: 0 2px 8px rgba(245,158,11,.15); }
+
+    .card-top { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .student-name { font-size: 17px; font-weight: 800; }
+    .student-id   { font-size: 12px; color: var(--muted); }
+
+    .badges { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+    .badge {
+      font-size: 11px; font-weight: 600;
+      padding: 3px 9px; border-radius: 20px;
+    }
+    .b-반   { background: #dcfce7; color: #166534; }
+    .b-좌석 { background: #dbeafe; color: #1e40af; }
+    .b-조합 { background: #f3e8ff; color: #6b21a8; }
+    .b-외박 { background: #fff7ed; color: #c2410c; }
+    .b-퀀텀 { background: #fce7f3; color: #9d174d; }
+    .b-성별 { background: #f1f5f9; color: #475569; }
+
+    .status-btns { display: flex; gap: 6px; }
+    .status-btn {
+      flex: 1; padding: 9px 4px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 13px; font-weight: 700;
+      cursor: pointer; background: white; color: var(--muted);
+      transition: all .15s;
+    }
+    .status-btn:hover { filter: brightness(0.95); }
+    .s-출석 { background: var(--teal)  !important; color: white !important; border-color: var(--teal)  !important; }
+    .s-외박 { background: #6366f1       !important; color: white !important; border-color: #6366f1       !important; }
+    .s-취소 { background: #9ca3af       !important; color: white !important; border-color: #9ca3af       !important; }
+    .s-기타 { background: #f59e0b       !important; color: white !important; border-color: #f59e0b       !important; }
+
+    /* ── 공통 유틸 ── */
+    .loading {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 60px 20px; gap: 16px; color: var(--muted);
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border); border-top-color: var(--teal);
+      border-radius: 50%; animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+    .retry-btn {
+      margin-top: 12px; padding: 9px 20px;
+      background: var(--teal); color: white;
+      border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════ ① 로그인 ════════ -->
+<div id="screen-login" class="screen active">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-title">강남대성기숙 QUETTA</div>
+      <div class="logo-sub">출석 관리 시스템</div>
+    </div>
+    <div class="field">
+      <label>비밀번호</label>
+      <input type="password" id="pw-input" placeholder="비밀번호 입력" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="btn-login">로그인</button>
+    <p class="login-error" id="login-error"></p>
+  </div>
+</div>
+
+<!-- ════════ ② 수업 선택 ════════ -->
+<div id="screen-home" class="screen">
+  <div class="header">
+    <div class="header-titles">
+      <div class="header-sub">강남대성기숙 QUETTA</div>
+      <h2>출석부</h2>
+    </div>
+    <span id="home-week" style="font-size:12px;opacity:.8;white-space:nowrap"></span>
+    <button class="btn-icon" id="btn-refresh" title="새로고침">↺</button>
+    <button class="btn-icon" id="btn-logout" title="로그아웃">⏻</button>
+  </div>
+
+  <div class="search-wrap">
+    <input type="search" id="class-search" placeholder="수업 검색 (예: K국어S, 탐구A...)">
+  </div>
+
+  <div class="class-list" id="class-list">
+    <div class="loading"><div class="spinner"></div><span>데이터 불러오는 중...</span></div>
+  </div>
+</div>
+
+<!-- ════════ ③ 출석 체크 ════════ -->
+<div id="screen-attendance" class="screen">
+  <div class="header">
+    <button class="btn-icon" id="btn-back">←</button>
+    <div class="header-titles">
+      <div class="header-sub" id="att-subject"></div>
+      <h2 id="att-class-name"></h2>
+    </div>
+    <span id="att-week" style="font-size:11px;opacity:.8;white-space:nowrap"></span>
+  </div>
+
+  <div class="week-bar">
+    <span class="week-stats" id="att-stats">집계 중...</span>
+    <div class="week-actions">
+      <button class="btn-save"  id="btn-save-week">주 마감</button>
+      <button class="btn-reset" id="btn-reset-week">리셋</button>
+    </div>
+  </div>
+
+  <div class="student-list" id="student-list"></div>
+</div>
+
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+// ═══════════════════════════════
+// 설정
+// ═══════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyChC7cRYAii31ac8yUEZA8Rex5CgpZECWQ",
+  authDomain:        "quetta-attendance.firebaseapp.com",
+  databaseURL:       "https://quetta-attendance-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "quetta-attendance",
+  storageBucket:     "quetta-attendance.firebasestorage.app",
+  messagingSenderId: "669499495003",
+  appId:             "1:669499495003:web:b4d262a6123945e45d257e"
+};
+
+const API_URL     = 'https://script.google.com/macros/s/AKfycbyaAGeW3InehpzQBshX6Hs5Kk1Jx-YeNvxjQxKVWJqhyjq9FP9LMBkkbQu8w3NgjHLE/exec';
+const API_SECRET  = 'quetta2026';
+const LOGIN_EMAIL = 'admin@quetta.local';
+
+// ═══════════════════════════════
+// Firebase 초기화
+// ═══════════════════════════════
+firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth();
+const db   = firebase.database();
+
+// ═══════════════════════════════
+// 전역 상태
+// ═══════════════════════════════
+let allStudents    = {};
+let allClasses     = [];
+let selectedClass  = null;
+let attendanceRef  = null;
+let attendanceData = {};
+const weekKey      = getWeekKey();
+
+// ═══════════════════════════════
+// 유틸
+// ═══════════════════════════════
+function getWeekKey() {
+  const d   = new Date();
+  const day = d.getDay() || 7;
+  d.setDate(d.getDate() + 4 - day);
+  const y     = d.getFullYear();
+  const start = new Date(y, 0, 1);
+  const w     = Math.ceil((((d - start) / 86400000) + 1) / 7);
+  return `${y}-W${String(w).padStart(2, '0')}`;
+}
+
+function weekLabel(k) {
+  const [y, w] = k.split('-W');
+  return `${y}년 ${parseInt(w)}주차`;
+}
+
+function sanitizeKey(s) {
+  return s.replace(/[.#$[\]/\s]/g, '_');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════
+// 로그인
+// ═══════════════════════════════
+const btnLogin  = document.getElementById('btn-login');
+const pwInput   = document.getElementById('pw-input');
+const loginErr  = document.getElementById('login-error');
+
+btnLogin.addEventListener('click', doLogin);
+pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogin() {
+  const pw = pwInput.value.trim();
+  if (!pw) { loginErr.textContent = '비밀번호를 입력해주세요.'; return; }
+  btnLogin.disabled    = true;
+  btnLogin.textContent = '로그인 중...';
+  loginErr.textContent = '';
+  try {
+    await auth.signInWithEmailAndPassword(LOGIN_EMAIL, pw);
+  } catch {
+    loginErr.textContent     = '비밀번호가 올바르지 않습니다.';
+    btnLogin.disabled        = false;
+    btnLogin.textContent     = '로그인';
+  }
+}
+
+document.getElementById('btn-logout').addEventListener('click', () => {
+  if (confirm('로그아웃 하시겠어요?')) auth.signOut();
+});
+
+// ═══════════════════════════════
+// 인증 상태 감지
+// ═══════════════════════════════
+auth.onAuthStateChanged(user => {
+  if (user) {
+    showScreen('screen-home');
+    document.getElementById('home-week').textContent = weekLabel(weekKey);
+    if (!Object.keys(allStudents).length) loadStudents();
+  } else {
+    showScreen('screen-login');
+    btnLogin.disabled    = false;
+    btnLogin.textContent = '로그인';
+    pwInput.value        = '';
+  }
+});
+
+// ═══════════════════════════════
+// 학생 데이터 로드
+// ═══════════════════════════════
+document.getElementById('btn-refresh').addEventListener('click', loadStudents);
+
+async function loadStudents() {
+  const list = document.getElementById('class-list');
+  list.innerHTML = '<div class="loading"><div class="spinner"></div><span>데이터 불러오는 중...</span></div>';
+
+  try {
+    const res  = await fetch(`${API_URL}?token=${API_SECRET}`);
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || '오류');
+
+    allStudents = json.students;
+    buildClasses();
+    renderClasses('');
+  } catch (err) {
+    list.innerHTML = `
+      <div class="empty">
+        ❌ 데이터 로드 실패<br>${err.message}
+        <br><button class="retry-btn" onclick="loadStudents()">다시 시도</button>
+      </div>`;
+  }
+}
+
+// ═══════════════════════════════
+// 수업 목록 구성
+// ═══════════════════════════════
+function buildClasses() {
+  const map = {};
+  for (const 학번 in allStudents) {
+    (allStudents[학번].수업목록 || []).forEach(u => {
+      if (!u.그룹명) return;
+      if (!map[u.그룹명]) map[u.그룹명] = { count: 0, subjects: new Set() };
+      map[u.그룹명].count++;
+      if (u.과목명) map[u.그룹명].subjects.add(u.과목명);
+    });
+  }
+  allClasses = Object.entries(map)
+    .map(([그룹명, v]) => ({ 그룹명, count: v.count, subjects: [...v.subjects].join(', ') }))
+    .sort((a, b) => a.그룹명.localeCompare(b.그룹명, 'ko'));
+}
+
+function renderClasses(q) {
+  const list     = document.getElementById('class-list');
+  const filtered = q
+    ? allClasses.filter(c =>
+        c.그룹명.toLowerCase().includes(q.toLowerCase()) ||
+        c.subjects.toLowerCase().includes(q.toLowerCase()))
+    : allClasses;
+
+  if (!filtered.length) { list.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>'; return; }
+
+  list.innerHTML = filtered.map(c => `
+    <div class="class-item" onclick="openClass(${JSON.stringify(c.그룹명)})">
+      <div>
+        <div class="class-item-name">${c.그룹명}</div>
+        <div class="class-item-sub">${c.subjects}</div>
+      </div>
+      <span class="class-count">${c.count}명</span>
+    </div>`).join('');
+}
+
+document.getElementById('class-search').addEventListener('input', e => renderClasses(e.target.value.trim()));
+
+// ═══════════════════════════════
+// 수업 열기
+// ═══════════════════════════════
+function openClass(그룹명) {
+  selectedClass = 그룹명;
+
+  const subjects = new Set();
+  for (const 학번 in allStudents) {
+    (allStudents[학번].수업목록 || []).forEach(u => {
+      if (u.그룹명 === 그룹명) subjects.add(u.과목명);
+    });
+  }
+
+  document.getElementById('att-class-name').textContent = 그룹명;
+  document.getElementById('att-subject').textContent    = [...subjects].join(' / ');
+  document.getElementById('att-week').textContent       = weekLabel(weekKey);
+  showScreen('screen-attendance');
+  listenAttendance();
+}
+
+document.getElementById('btn-back').addEventListener('click', () => {
+  if (attendanceRef) { attendanceRef.off(); attendanceRef = null; }
+  showScreen('screen-home');
+});
+
+// ═══════════════════════════════
+// 실시간 출석 데이터
+// ═══════════════════════════════
+function listenAttendance() {
+  document.getElementById('student-list').innerHTML =
+    '<div class="loading"><div class="spinner"></div><span>불러오는 중...</span></div>';
+
+  if (attendanceRef) attendanceRef.off();
+
+  const path = `attendance/${weekKey}/${sanitizeKey(selectedClass)}`;
+  attendanceRef = db.ref(path);
+  attendanceRef.on('value', snap => {
+    attendanceData = snap.val() || {};
+    renderStudents();
+    updateStats();
+  });
+}
+
+// ═══════════════════════════════
+// 학생 카드 렌더링
+// ═══════════════════════════════
+function renderStudents() {
+  const list     = document.getElementById('student-list');
+  const students = [];
+
+  for (const 학번 in allStudents) {
+    const s    = allStudents[학번];
+    const 수업 = (s.수업목록 || []).find(u => u.그룹명 === selectedClass);
+    if (수업) students.push({ ...s, 해당수업: 수업 });
+  }
+
+  students.sort((a, b) => {
+    if (a.반 !== b.반) return a.반.localeCompare(b.반, 'ko');
+    return a.성명.localeCompare(b.성명, 'ko');
+  });
+
+  if (!students.length) {
+    list.innerHTML = '<div class="empty">해당 수업 학생이 없습니다.</div>';
+    return;
+  }
+
+  list.innerHTML = students.map(s => {
+    const status = (attendanceData[s.학번] || {}).status || '';
+    const { 좌석, 조합 } = s.해당수업;
+
+    return `
+    <div class="student-card${status ? ' st-' + status : ''}" id="card-${s.학번}">
+      <div class="card-top">
+        <span class="student-name">${s.성명}</span>
+        <span class="student-id">${s.학번}</span>
+      </div>
+      <div class="badges">
+        ${s.반      ? `<span class="badge b-반">${s.반}</span>`           : ''}
+        ${s.성별    ? `<span class="badge b-성별">${s.성별}</span>`       : ''}
+        ${좌석      ? `<span class="badge b-좌석">좌석 ${좌석}</span>`    : ''}
+        ${조합      ? `<span class="badge b-조합">${조합}</span>`         : ''}
+        ${s.외박여부? `<span class="badge b-외박">외박 ${s.외박여부}</span>` : ''}
+        ${s.퀀텀자리? `<span class="badge b-퀀텀">퀀텀 ${s.퀀텀자리}</span>` : ''}
+      </div>
+      <div class="status-btns">
+        ${['출석','외박','취소','기타'].map(st => `
+          <button class="status-btn${status === st ? ' s-'+st : ''}"
+            onclick="setStatus('${s.학번}','${st}')">
+            ${st}
+          </button>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════
+// 출석 상태 저장 (토글)
+// ═══════════════════════════════
+function setStatus(학번, status) {
+  const path    = `attendance/${weekKey}/${sanitizeKey(selectedClass)}/${학번}`;
+  const current = (attendanceData[학번] || {}).status;
+
+  if (current === status) {
+    db.ref(path).remove();
+  } else {
+    db.ref(path).set({ status, updated_at: Date.now() });
+  }
+}
+
+// ═══════════════════════════════
+// 통계
+// ═══════════════════════════════
+function updateStats() {
+  const c = { 출석: 0, 외박: 0, 취소: 0, 기타: 0, 미체크: 0 };
+  let total = 0;
+
+  for (const 학번 in allStudents) {
+    if (!(allStudents[학번].수업목록 || []).find(u => u.그룹명 === selectedClass)) continue;
+    total++;
+    const st = (attendanceData[학번] || {}).status;
+    st ? c[st]++ : c['미체크']++;
+  }
+
+  document.getElementById('att-stats').textContent =
+    `전체 ${total} | 출석 ${c.출석}  외박 ${c.외박}  취소 ${c.취소}  기타 ${c.기타}  미체크 ${c.미체크}`;
+}
+
+// ═══════════════════════════════
+// 주 마감 저장
+// ═══════════════════════════════
+document.getElementById('btn-save-week').addEventListener('click', async () => {
+  if (!confirm(`${weekLabel(weekKey)} 전체 출석을 저장할까요?\n(저장 후에도 데이터는 유지됩니다)`)) return;
+  try {
+    const snap = await db.ref(`attendance/${weekKey}`).get();
+    if (snap.exists()) {
+      await db.ref(`weekly_archive/${weekKey}`).set({
+        saved_at: Date.now(),
+        data: snap.val(),
+      });
+    }
+    alert(`✅ ${weekLabel(weekKey)} 저장 완료!`);
+  } catch (err) {
+    alert('저장 실패: ' + err.message);
+  }
+});
+
+// ═══════════════════════════════
+// 현재 수업 리셋
+// ═══════════════════════════════
+document.getElementById('btn-reset-week').addEventListener('click', async () => {
+  if (!confirm(`[${selectedClass}] 이번 주 출석을 초기화할까요?`)) return;
+  try {
+    await db.ref(`attendance/${weekKey}/${sanitizeKey(selectedClass)}`).remove();
+    alert('초기화 완료!');
+  } catch (err) {
+    alert('초기화 실패: ' + err.message);
+  }
+});
+</script>
+</body>
+</html>
