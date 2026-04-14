@@ -355,12 +355,20 @@ async function login(){
 }
 document.getElementById('blo2').addEventListener('click',()=>{if(confirm('로그아웃?'))auth.signOut()});
 auth.onAuthStateChanged(u=>{
-  if(u){ss('sh');document.getElementById('hwk').textContent=wkLbl(wk);if(!Object.keys(allStu).length)loadStu();loadTT();loadSes();}
+  if(u){
+    ss('sh');document.getElementById('hwk').textContent=wkLbl(wk);
+    // tt, sessions 먼저 로드 후 학생 데이터 로드 (순서 보장)
+    Promise.all([loadTT(),loadSes()]).then(()=>{
+      if(!Object.keys(allStu).length)loadStu();
+    });
+  }
   else{ss('sl');BLO.disabled=false;BLO.textContent='로그인';PWI.value=''}
 });
 
 // 학생 데이터
-document.getElementById('bref').addEventListener('click',loadStu);
+document.getElementById('bref').addEventListener('click',()=>{
+  Promise.all([loadTT(),loadSes()]).then(()=>loadStu());
+});
 async function loadStu(){
   const l=document.getElementById('cl');
   l.innerHTML='<div class="loading"><div class="sp"></div><span>불러오는 중...</span></div>';
