@@ -416,18 +416,11 @@ function getSesStudentCount(ses){
 // 수업명 표시 포맷: "과목명 · 그룹명 · 조합"
 function clsLabel(c){return`${c.과목명||'(과목없음)'} · ${c.그룹명} · ${c.조합}`}
 function clsSub(c){
-  // 세션에서 먼저 찾기 (과목명+그룹명+조합 정확 매칭)
-  const ses=sessions.find(s=>(s.items||[]).some(it=>it.그룹명===c.그룹명&&it.조합===c.조합&&(it.과목명||'')===(c.과목명||'')));
-  // 시간표에서 찾기 - 그룹명+과목명 둘 다 매칭, 없으면 그룹명만
-  const tt2=tt.find(t=>t.그룹===c.그룹명&&(t.과목||'')===(c.과목명||''))||tt.find(t=>t.그룹===c.그룹명);
-  const src=ses||tt2;
-  if(!src)return'';
-  const parts=[];
-  if(src.요일)parts.push(src.요일);
-  if(src.시간)parts.push(src.시간);
-  const teacher=ses?.선생님||tt2?.선생님||'';
-  if(teacher)parts.push(teacher);
-  return parts.filter(Boolean).join(' · ');
+  // 요일/시간/선생님은 항상 시간표 기준 (과목명+그룹명 정확 매칭 → 그룹명만 매칭 순)
+  const tt2=tt.find(t=>t.그룹===c.그룹명&&(t.과목||'').trim()===(c.과목명||'').trim())
+            ||tt.find(t=>t.그룹===c.그룹명);
+  if(!tt2)return'';
+  return[tt2.요일,tt2.시간,tt2.선생님].filter(Boolean).join(' · ');
 }
 
 function renderCls(q=''){
