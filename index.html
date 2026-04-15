@@ -464,16 +464,23 @@ function renderCls(q=''){
 
   let html='';
   if(!q){
-    // 전체 탭: 저장된 세션 목록 먼저, 그 다음 전체 수업
     if(sessions.length){
+      const dayOrder={월:0,화:1,수:2,목:3,금:4,토:5,일:6};
+      const sortedSes=[...sessions].map((s,i)=>{
+        const firstItem=(s.items||[])[0];
+        const ttSub=firstItem?clsSub({그룹명:firstItem.그룹명,과목명:firstItem.과목명||''}):'';
+        const ttDay=(ttSub.split(' · ')[0])||'';
+        return{s,i,ttSub,ttDay};
+      }).sort((a,b)=>(dayOrder[a.ttDay]??9)-(dayOrder[b.ttDay]??9));
+      window._tds=sortedSes.map(x=>x.s);
       html+=`<div class="sl2">정기수업 세션 (${sessions.length})</div>`;
-      window._tds=sessions;
-      html+=sessions.map((s,i)=>{
+      html+=sortedSes.map(({s,i,ttSub,ttDay},si)=>{
         const cnt=getSesStudentCount(s);
-        const isToday=s.요일===td;
-        return`<div class="ci${isToday?' tc':''}" onclick="openSes(${i})">
+        const isToday=ttDay===td;
+        const infoStr=ttSub||[s.요일,s.시간,s.강의실,s.선생님].filter(Boolean).join(' · ');
+        return`<div class="ci${isToday?' tc':''}" onclick="openSes(${si})">
           <div><div class="cn">${s.name}</div>
-          <div class="cs">${[s.요일,s.시간,s.강의실,s.선생님].filter(Boolean).join(' · ')}</div>
+          <div class="cs">${infoStr}</div>
           <div class="ct">${(s.items||[]).length}개 수업 포함</div></div>
           <span class="cc${isToday?' today':''}">${cnt}명</span>
         </div>`;
@@ -811,18 +818,28 @@ async function loadSes(){const snap=await db.ref('sessions').get();sessions=snap
 function renderSes(){
   const l=document.getElementById('rsl');
   if(!sessions.length){l.innerHTML='<div class="empty">세션이 없습니다.</div>';return}
-  l.innerHTML=sessions.map((s,i)=>{
-    const cnt=getSesStudentCount(s);
-    // 시간표에서 실시간으로 정보 가져오기 (세션에 저장된 값 대신)
+  const dayOrder={월:0,화:1,수:2,목:3,금:4,토:5,일:6};
+  // 요일 순 정렬 (요일은 시간표에서 실시간으로 가져옴)
+  const sorted=[...sessions].map((s,origIdx)=>{
     const firstItem=(s.items||[])[0];
-    const ttInfo=firstItem?clsSub({그룹명:firstItem.그룹명,과목명:firstItem.과목명||''}):'';
-    const infoStr=ttInfo||[s.요일,s.시간,s.강의실,s.선생님].filter(Boolean).join(' · ');
+    const ttSub=firstItem?clsSub({그룹명:firstItem.그룹명,과목명:firstItem.과목명||''}):'';
+    const ttParts=ttSub.split(' · ');
+    const ttDay=ttParts[0]||'';
+    return{s,origIdx,ttSub,ttDay};
+  }).sort((a,b)=>{
+    const da=dayOrder[a.ttDay]??9, db=dayOrder[b.ttDay]??9;
+    return da-db;
+  });
+
+  l.innerHTML=sorted.map(({s,origIdx,ttSub})=>{
+    const cnt=getSesStudentCount(s);
+    const infoStr=ttSub||[s.요일,s.시간,s.강의실,s.선생님].filter(Boolean).join(' · ');
     return`<div class="rsc">
       <div class="rsch">
         <div><div class="rsn">${s.name}</div><div class="rsi">${infoStr}${infoStr?' · ':''}${cnt}명</div></div>
         <div class="rsact">
-          <button class="brsed" onclick="editSes(${i})">수정</button>
-          <button class="brsdl" onclick="delSes(${i})">✕</button>
+          <button class="brsed" onclick="editSes(${origIdx})">수정</button>
+          <button class="brsdl" onclick="delSes(${origIdx})">✕</button>
         </div>
       </div>
       <div class="rsi-badges">${(s.items||[]).map(it=>`<span class="ri-badge">${it.과목명||it.그룹명} · ${it.그룹명} · ${it.조합}</span>`).join('')}</div>
