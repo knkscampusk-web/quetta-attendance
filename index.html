@@ -813,9 +813,13 @@ function renderSes(){
   if(!sessions.length){l.innerHTML='<div class="empty">세션이 없습니다.</div>';return}
   l.innerHTML=sessions.map((s,i)=>{
     const cnt=getSesStudentCount(s);
+    // 시간표에서 실시간으로 정보 가져오기 (세션에 저장된 값 대신)
+    const firstItem=(s.items||[])[0];
+    const ttInfo=firstItem?clsSub({그룹명:firstItem.그룹명,과목명:firstItem.과목명||''}):'';
+    const infoStr=ttInfo||[s.요일,s.시간,s.강의실,s.선생님].filter(Boolean).join(' · ');
     return`<div class="rsc">
       <div class="rsch">
-        <div><div class="rsn">${s.name}</div><div class="rsi">${[s.요일,s.시간,s.강의실,s.선생님].filter(Boolean).join(' · ')} · ${cnt}명</div></div>
+        <div><div class="rsn">${s.name}</div><div class="rsi">${infoStr}${infoStr?' · ':''}${cnt}명</div></div>
         <div class="rsact">
           <button class="brsed" onclick="editSes(${i})">수정</button>
           <button class="brsdl" onclick="delSes(${i})">✕</button>
@@ -903,7 +907,12 @@ function updateScheduleSection(){
   const manSched=document.getElementById('manual-schedule');
   if(selItems.size===1){
     const[그룹명,조합,과목명]=[...selItems][0].split('|||');
-    const tt2=tt.find(t=>t.그룹===그룹명);
+    const cGrp=normalize(그룹명), cSub=normalize(과목명);
+    // clsSub와 동일한 우선순위로 시간표 찾기
+    let tt2=tt.find(t=>normalize(t.그룹)===cGrp&&normalize(t.과목)===cSub);
+    if(!tt2)tt2=tt.find(t=>(normalize(t.그룹).includes(cGrp)||cGrp.includes(normalize(t.그룹)))&&normalize(t.과목)===cSub);
+    if(!tt2)tt2=tt.find(t=>normalize(t.그룹)===cGrp);
+    if(!tt2)tt2=tt.find(t=>normalize(t.그룹).includes(cGrp)||cGrp.includes(normalize(t.그룹)));
     if(!editSesId)document.getElementById('asname').value=`${과목명||그룹명} · ${그룹명} · ${조합}`;
     if(tt2){
       document.getElementById('asday').value=tt2.요일||'';
