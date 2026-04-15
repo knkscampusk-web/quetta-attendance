@@ -415,10 +415,17 @@ function getSesStudentCount(ses){
 
 // 수업명 표시 포맷: "과목명 · 그룹명 · 조합"
 function clsLabel(c){return`${c.과목명||'(과목없음)'} · ${c.그룹명} · ${c.조합}`}
+function normalize(s){return(s||'').replace(/\s+/g,'').toLowerCase()}
 function clsSub(c){
-  // 요일/시간/선생님은 항상 시간표 기준 (과목명+그룹명 정확 매칭 → 그룹명만 매칭 순)
-  const tt2=tt.find(t=>t.그룹===c.그룹명&&(t.과목||'').trim()===(c.과목명||'').trim())
-            ||tt.find(t=>t.그룹===c.그룹명);
+  const cGrp=normalize(c.그룹명), cSub=normalize(c.과목명);
+  // 1순위: 그룹+과목 둘 다 정확 매칭 (공백 무시)
+  let tt2=tt.find(t=>normalize(t.그룹)===cGrp&&normalize(t.과목)===cSub);
+  // 2순위: 그룹명 포함 관계 + 과목 매칭
+  if(!tt2)tt2=tt.find(t=>(normalize(t.그룹).includes(cGrp)||cGrp.includes(normalize(t.그룹)))&&normalize(t.과목)===cSub);
+  // 3순위: 그룹만 정확 매칭
+  if(!tt2)tt2=tt.find(t=>normalize(t.그룹)===cGrp);
+  // 4순위: 그룹 포함 관계
+  if(!tt2)tt2=tt.find(t=>normalize(t.그룹).includes(cGrp)||cGrp.includes(normalize(t.그룹)));
   if(!tt2)return'';
   return[tt2.요일,tt2.시간,tt2.선생님].filter(Boolean).join(' · ');
 }
